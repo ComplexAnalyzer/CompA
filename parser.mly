@@ -1,4 +1,4 @@
-/* Ocamlyacc parser for MicroC */
+/* Ocamlyacc parser for CompA */
 
 %{
 open Ast
@@ -7,9 +7,9 @@ open Ast
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL VOID
-%token <int> LITERAL
-%token <string> ID
+%token RETURN IF ELSE FOR WHILE INT BOOL STRING VOID
+%token <int> INTLIT
+%token <string> ID STRLIT
 %token EOF
 
 %nonassoc NOELSE
@@ -54,6 +54,7 @@ formal_list:
 
 typ:
     INT { Int }
+  | STRING { String }
   | BOOL { Bool }
   | VOID { Void }
 
@@ -84,7 +85,8 @@ expr_opt:
   | expr          { $1 }
 
 expr:
-    LITERAL          { Literal($1) }
+    INTLIT           { IntLit($1) }
+  | STRLIT           { StrLit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
