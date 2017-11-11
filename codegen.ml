@@ -51,17 +51,17 @@ let translate (globals, functions) =
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
-  let str_format_str builder = L.build_global_stringptr "%s\n" "fmt" builder in
-
+  
   (* Declare printf(), which the print built-in function will call *)
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
   
-  let s = build_global_stringptr "Hello, world!\n" "" builder in
+  (*let s = build_global_stringptr "Hello, world!\n" "" builder in
   let zero = const_int i32_t 0 in
   let s = build_in_bounds_gep s [| zero |] "" builder in
   let _ = build_call printf [| s |] "" builder in
   let _ = build_ret (const_int i32_t 0) builder in
+  *)
 
   (* Declare the built-in printbig() function *)
   let printbig_t = L.function_type i32_t [| i32_t |] in
@@ -83,7 +83,8 @@ let translate (globals, functions) =
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    
+    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
+  
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -140,7 +141,7 @@ let translate (globals, functions) =
       (*| A.Assign (s, e) -> let e' = expr builder e in
 	                   ignore (L.build_store e' (lookup s) builder); e'*)
       | A.Call ("print", [e]) | A.Call ("printb", [e]) ->
-	  L.build_call printf_func [| int_format_str ; (expr builder e) |]
+	  L.build_call printf_func [| str_format_str ; (expr builder e) |]
 	    "printf" builder
       | A.Call ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
