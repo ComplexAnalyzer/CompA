@@ -24,17 +24,20 @@ let translate (globals, functions) =
   and i8_t   = L.i8_type   context
   and i1_t   = L.i1_type   context
   and str_t  = L.pointer_type (L.i8_type context)
+  and float_t = L.double_type context 
   and void_t = L.void_type context in
+  
 
   let ltype_of_typ = function
       A.Int -> i32_t
     | A.String -> str_t
     | A.Bool -> i1_t
+    | A.Float -> float_t
     | A.Void -> void_t in
   
   let pointer_wrapper =
     List.fold_left (fun m name -> StringMap.add name (L.named_struct_type context name) m)
-    StringMap.empty ["string"; "int"; "void"; "bool"]
+    StringMap.empty ["string"; "int"; "float";"void"; "bool"]
   in
   (* Set the struct body (fields) for each of the pointer struct types *)
   List.iter2 (fun n l -> let t = StringMap.find n pointer_wrapper in
@@ -141,7 +144,7 @@ let translate (globals, functions) =
       (*| A.Assign (s, e) -> let e' = expr builder e in
 	                   ignore (L.build_store e' (lookup s) builder); e'*)
       | A.Call ("print", [e]) | A.Call ("printb", [e]) ->
-	  L.build_call printf_func [| str_format_str ; (expr builder e) |]
+	  L.build_call printf_func [| int_format_str ; (expr builder e) |]
 	    "printf" builder
       | A.Call ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
