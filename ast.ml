@@ -13,7 +13,7 @@ type expr =
     IntLit of int
   | StrLit of string
   | BoolLit of bool
-  | CxLit of expr * string * expr
+  | CxLit of  float * float
   | FloatLit of float
   | Id of string
   | Binop of expr * op * expr

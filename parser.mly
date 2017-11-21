@@ -96,7 +96,7 @@ expr:
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
   | FLOATLIT         { FloatLit($1)} #add 
-  | CXLIT            { CxLit(LBRACE,$2,COMMA,$4,RBRACE)} #add 
+  | LPAREN FLOATLIT COMMA FLOATLIT RPAREN { CxLit($2,$4)} #add 
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
