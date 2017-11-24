@@ -36,6 +36,7 @@ let translate (globals, functions) =
     | A.Float -> float_t
     | A.Void -> void_t 
     | A.Complex -> vector_t  in
+
   
   let pointer_wrapper =
     List.fold_left (fun m name -> StringMap.add name (L.named_struct_type context name) m)
@@ -61,13 +62,6 @@ let translate (globals, functions) =
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
   
-  (*let s = build_global_stringptr "Hello, world!\n" "" builder in
-  let zero = const_int i32_t 0 in
-  let s = build_in_bounds_gep s [| zero |] "" builder in
-  let _ = build_call printf [| s |] "" builder in
-  let _ = build_ret (const_int i32_t 0) builder in
-  *)
-
   (* Declare the built-in printbig() function *)
   let printbig_t = L.function_type i32_t [| i32_t |] in
   let printbig_func = L.declare_function "printbig" printbig_t the_module in
@@ -95,8 +89,9 @@ let translate (globals, functions) =
     let (the_function, _) = StringMap.find fdecl.A.fname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
+    (*let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in*)
+    (* let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in *)
+    let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
   
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -125,6 +120,7 @@ let translate (globals, functions) =
 	(*TODO*)
     (* A.Literal i -> L.const_int i32_t i*)
     A.IntLit i -> L.const_int i32_t i
+      | A.FloatLit f -> L.const_float float_t f
       | A.StrLit s -> L.build_global_stringptr s "string" builder
       | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
       | A.Noexpr -> L.const_int i32_t 0
@@ -154,8 +150,9 @@ let translate (globals, functions) =
       (*| A.Assign (s, e) -> let e' = expr builder e in
 	                   ignore (L.build_store e' (lookup s) builder); e'*)
       | A.Call ("print", [e]) | A.Call ("printb", [e]) ->
-	  L.build_call printf_func [| int_format_str ; (expr builder e) |]
-	    "printf" builder
+
+	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
+    "printf" builder
       | A.Call ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
       | A.Call (f, act) ->
