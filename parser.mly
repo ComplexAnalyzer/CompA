@@ -10,8 +10,8 @@ open Ast
 %token RETURN IF ELSE FOR WHILE INT BOOL STRING VOID COMPLEX 
 %token <int> INTLIT
 %token <string> ID STRLIT
-%token <float> FLOATLIT #add 
-%token CXLIT  #add 
+%token <float> FLOATLIT 
+%token CXLIT  
 %token EOF
 
 %nonassoc NOELSE
@@ -95,8 +95,8 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
-  | FLOATLIT         { FloatLit($1)} #add 
-  | LPAREN FLOATLIT COMMA FLOATLIT RPAREN { CxLit($2,$4)} #add 
+  | FLOATLIT         { FloatLit($1)} 
+  | LPAREN expr COMMA expr RPAREN { CxLit($2,$4)} 
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }

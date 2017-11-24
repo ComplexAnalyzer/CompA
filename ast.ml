@@ -5,7 +5,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String | Complex | Float  #add float
+type typ = Int | Bool | Void | String | Complex | Float  
 
 type bind = typ * string
 
@@ -66,8 +66,8 @@ let rec string_of_expr = function
   | StrLit(s) -> s
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
-  | CxLit(l1,l2) ->  "("^ string_of_float l1 ^ "," ^ string_of_float l2 ^ ")"  #add 
-  | FloatLit(l1) -> string_of_float l1 #add 
+  | CxLit(l1,l2) ->  "("^ string_of_float l1 ^ "," ^ string_of_float l2 ^ ")"  
+  | FloatLit(l1) -> string_of_float l1 
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
@@ -96,8 +96,8 @@ let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
   | Void -> "void"
-  | Complex -> "cx" #add 
-  | Float  -> "float" #add 
+  | Complex -> "cx" 
+  | Float  -> "float" 
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

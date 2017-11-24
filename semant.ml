@@ -80,6 +80,10 @@ let check (globals, functions) =
     report_duplicate (fun n -> "duplicate local " ^ n ^ " in " ^ func.fname)
       (List.map snd func.locals);
 
+    
+
+
+
     (* Type of each variable (global, formal, or local *)
     let symbols = List.fold_left (fun m (t, n) -> StringMap.add n t m)
 	StringMap.empty (globals @ func.formals @ func.locals )

@@ -5,8 +5,8 @@
 let ascii = [' '-'!' '#'-'[' ']'-'~']
 let string_literal = '"' ((ascii)* as s) '"' 
 let digit = ['0'-'9']
-let float = (digit+) ['.'] digit+ #add 
-let complex = ['(']float[',']float[')'] #add 
+let float = (digit+) ['.'] digit+ 
+let complex = ['(']float[',']float[')']
 
 
 rule token = parse
@@ -48,16 +48,16 @@ rule token = parse
 | "int"    { INT }
 | "bool"   { BOOL }
 | "string" { STRING }
-| "cx"     { COMPLEX } #add 
-| "float"  { FLOAT} #add 
+| "cx"     { COMPLEX } 
+| "float"  { FLOAT} 
 
 (* Data Values *)
 | "void"   { VOID }
 | "true"   { TRUE }
 | "false"  { FALSE }
 | string_literal { STRLIT(s) }
-| float as lxm { FLOATLIT(float_of_string lxm) } #add 
-| complex as lxm { CXLIT(complex_of_string lxm)} #add 
+| float as lxm { FLOATLIT(float_of_string lxm) } 
+| complex as lxm { CXLIT(complex_of_string lxm)} 
 | digit+ as lxm { INTLIT(int_of_string lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
 | eof { EOF }

@@ -24,8 +24,9 @@ let translate (globals, functions) =
   and i8_t   = L.i8_type   context
   and i1_t   = L.i1_type   context
   and str_t  = L.pointer_type (L.i8_type context)
-  and float_t = L.double_type context 
-  and void_t = L.void_type context in
+  and float_t = L.float_type  context 
+  and void_t = L.void_type context 
+  and vector_t = L.vector_type context in
   
 
   let ltype_of_typ = function
@@ -33,19 +34,20 @@ let translate (globals, functions) =
     | A.String -> str_t
     | A.Bool -> i1_t
     | A.Float -> float_t
-    | A.Void -> void_t in
+    | A.Void -> void_t 
+    | A.Complex -> vector_t  in
   
   let pointer_wrapper =
     List.fold_left (fun m name -> StringMap.add name (L.named_struct_type context name) m)
-    StringMap.empty ["string"; "int"; "float";"void"; "bool"]
+    StringMap.empty ["string"; "int"; "float";"void"; "bool";"cx"]
   in
   (* Set the struct body (fields) for each of the pointer struct types *)
   List.iter2 (fun n l -> let t = StringMap.find n pointer_wrapper in
   ignore(L.struct_set_body t (Array.of_list(l)) true))
-  ["int"; "string"; "void"; "bool"]
+  ["int"; "string"; "void"; "bool";"float";"cx"]
   [[L.pointer_type i32_t; i32_t; i32_t];
   [L.pointer_type str_t; i32_t; i32_t];
-  [L.pointer_type void_t; i32_t; i32_t]; [L.pointer_type i1_t; i32_t; i32_t]];
+  [L.pointer_type void_t; i32_t; i32_t]; [L.pointer_type i1_t; i32_t; i32_t];[L.pointer_type float_t;i32_t; i32_t];[L.pointer_type vector_t;i32_t; i32_t]]
   
   (* Declare each global variable; remember its value in a map *)
   let global_vars =
@@ -69,6 +71,14 @@ let translate (globals, functions) =
   (* Declare the built-in printbig() function *)
   let printbig_t = L.function_type i32_t [| i32_t |] in
   let printbig_func = L.declare_function "printbig" printbig_t the_module in
+
+
+
+
+
+
+
+  
 
   (* Define each function (arguments and return type) so we can call it *)
   let function_decls =
