@@ -5,7 +5,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String
+type typ = Int | Bool | Void | String (*| Complex*) | Float
 
 type bind = typ * string
 
@@ -13,6 +13,8 @@ type expr =
     IntLit of int
   | StrLit of string
   | BoolLit of bool
+  | FloatLit of float
+  (*| CxLit of float * float*)
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -24,7 +26,6 @@ type stmt =
     Block of stmt list
   | Expr of expr
   | Return of expr
-  | Assign of string * expr
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
   | While of expr * stmt
@@ -64,6 +65,8 @@ let rec string_of_expr = function
   | StrLit(s) -> s
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
+  | FloatLit(l1) -> string_of_float l1 (*#add*) 
+  (*| CxLit(l1,l2) ->  "("^ string_of_float l1 ^ "," ^ string_of_float l2 ^ ")" *)
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
@@ -85,13 +88,14 @@ let rec string_of_stmt = function
       "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
-  (*| Assign(v, e) -> v ^ " = " ^ string_of_expr e*)
-
 
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
   | Void -> "void"
+  | String -> "string"
+  | Float  -> "float" 
+  (*| Complex -> "cx" *)
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

@@ -4,12 +4,14 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT
-%token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL STRING VOID
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA 
+%token PLUS MINUS TIMES DIVIDE ASSIGN
+%token EQ NEQ LT LEQ GT GEQ AND OR NOT TRUE FALSE
+%token IF ELSE FOR WHILE RETURN
+%token INT BOOL STRING VOID COMPLEX FLOAT
 %token <int> INTLIT
 %token <string> ID STRLIT
+%token <float> FLOATLIT 
 %token EOF
 
 %nonassoc NOELSE
@@ -44,6 +46,7 @@ fdecl:
 	 locals = List.rev $7;
 	 body = List.rev $8 } }
 
+
 formals_opt:
     /* nothing */ { [] }
   | formal_list   { List.rev $1 }
@@ -57,6 +60,7 @@ typ:
   | STRING { String }
   | BOOL { Bool }
   | VOID { Void }
+  | FLOAT { Float }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -90,6 +94,7 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | FLOATLIT         { FloatLit($1)} 
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
