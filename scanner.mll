@@ -6,12 +6,19 @@ let ascii = [' '-'!' '#'-'[' ']'-'~']
 let string_literal = '"' ((ascii)* as s) '"' 
 
 rule token = parse
-  [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
-| "/*"     { comment lexbuf }           (* Comments *)
+(* Whitespace *)
+  [' ' '\t' '\r' '\n'] { token lexbuf }
+
+(* Comments *)
+| "/*"     { comment lexbuf }
+
+(* Delimeters *)
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
+| '['      { LSQRBR }
+| ']'      { RSQRBR }
 | ';'      { SEMI }
 | ','      { COMMA }
 
@@ -44,6 +51,7 @@ rule token = parse
 | "int"    { INT }
 | "bool"   { BOOL }
 | "string" { STRING }
+| "mx"     { MATRIX }
 
 (* Data Values *)
 | "void"   { VOID }
@@ -51,7 +59,11 @@ rule token = parse
 | "false"  { FALSE }
 | string_literal { STRLIT(s) }
 | ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
+
+(* Identifiers *)
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
+
+(* End of File and Invalid Characters *)
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
