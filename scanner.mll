@@ -2,6 +2,7 @@
 
 { open Parser }
 
+let digit = ['0'-'9']
 let ascii = [' '-'!' '#'-'[' ']'-'~']
 let string_literal = '"' ((ascii)* as s) '"' 
 
@@ -51,6 +52,8 @@ rule token = parse
 | "int"    { INT }
 | "bool"   { BOOL }
 | "string" { STRING }
+| "float"  { FLOAT }
+| "cx"     { COMPLEX }
 | "mx"     { MATRIX }
 
 (* Data Values *)
@@ -58,7 +61,8 @@ rule token = parse
 | "true"   { TRUE }
 | "false"  { FALSE }
 | string_literal { STRLIT(s) }
-| ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
+| digit+ as lxm { INTLIT(int_of_string lxm) }
+| digit*'.'digit+ as lxm { FLOATLIT(float_of_string lxm) }
 
 (* Identifiers *)
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
