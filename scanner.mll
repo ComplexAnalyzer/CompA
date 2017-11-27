@@ -5,6 +5,7 @@
 let digit = ['0'-'9']
 let ascii = [' '-'!' '#'-'[' ']'-'~']
 let string_literal = '"' ((ascii)* as s) '"' 
+let float = (digit+)['.'](digit+)
 
 rule token = parse
 (* Whitespace *)
@@ -53,14 +54,15 @@ rule token = parse
 | "bool"   { BOOL }
 | "string" { STRING }
 | "float"  { FLOAT }
-| "cx"     { COMPLEX }
-| "mx"     { MATRIX }
+(*| "cx"     { COMPLEX }
+| "mx"     { MATRIX }*)
 
 (* Data Values *)
 | "void"   { VOID }
 | "true"   { TRUE }
 | "false"  { FALSE }
 | string_literal { STRLIT(s) }
+| float as lxm { FLOATLIT(float_of_string lxm) }
 | digit+ as lxm { INTLIT(int_of_string lxm) }
 | digit*'.'digit+ as lxm { FLOATLIT(float_of_string lxm) }
 

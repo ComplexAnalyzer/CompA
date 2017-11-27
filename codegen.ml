@@ -24,14 +24,17 @@ let translate (globals, functions) =
   and i8_t   = L.i8_type   context
   and i1_t   = L.i1_type   context
   and str_t  = L.pointer_type (L.i8_type context)
-  and void_t = L.void_type context in
+  and void_t = L.void_type context
+  and float_t= L.double_type context in
 
   let ltype_of_typ = function
       A.Int -> i32_t
+    | A.Float -> float_t
     | A.String -> str_t
     | A.Bool -> i1_t
     | A.Void -> void_t in
   
+  (*
   let pointer_wrapper =
     List.fold_left (fun m name -> StringMap.add name (L.named_struct_type context name) m)
     StringMap.empty ["string"; "int"; "void"; "bool"]
@@ -43,6 +46,7 @@ let translate (globals, functions) =
   [[L.pointer_type i32_t; i32_t; i32_t];
   [L.pointer_type str_t; i32_t; i32_t];
   [L.pointer_type void_t; i32_t; i32_t]; [L.pointer_type i1_t; i32_t; i32_t]];
+  *)
   
   (* Declare each global variable; remember its value in a map *)
   let global_vars =
@@ -82,8 +86,9 @@ let translate (globals, functions) =
     let (the_function, _) = StringMap.find fdecl.A.fname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
+    (*let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in*)
+    let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
+    (*let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in*)
   
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -112,6 +117,7 @@ let translate (globals, functions) =
 	(*TODO*)
     (* A.Literal i -> L.const_int i32_t i*)
     A.IntLit i -> L.const_int i32_t i
+      | A.FloatLit f -> L.const_float float_t f
       | A.StrLit s -> L.build_global_stringptr s "string" builder
       | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
       | A.Noexpr -> L.const_int i32_t 0
@@ -120,28 +126,28 @@ let translate (globals, functions) =
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in
 	  (match op with
-	    A.Add     -> L.build_add
-	  | A.Sub     -> L.build_sub
-	  | A.Mult    -> L.build_mul
-          | A.Div     -> L.build_sdiv
+	    A.Add     -> L.build_fadd
+	  | A.Sub     -> L.build_fsub
+	  | A.Mult    -> L.build_fmul
+          | A.Div     -> L.build_fdiv
 	  | A.And     -> L.build_and
 	  | A.Or      -> L.build_or
-	  | A.Equal   -> L.build_icmp L.Icmp.Eq
-	  | A.Neq     -> L.build_icmp L.Icmp.Ne
-	  | A.Less    -> L.build_icmp L.Icmp.Slt
-	  | A.Leq     -> L.build_icmp L.Icmp.Sle
-	  | A.Greater -> L.build_icmp L.Icmp.Sgt
-	  | A.Geq     -> L.build_icmp L.Icmp.Sge
+	  | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+	  | A.Neq     -> L.build_fcmp L.Fcmp.One
+	  | A.Less    -> L.build_fcmp L.Fcmp.Ult
+	  | A.Leq     -> L.build_fcmp L.Fcmp.Ole
+	  | A.Greater -> L.build_fcmp L.Fcmp.Ogt
+	  | A.Geq     -> L.build_fcmp L.Fcmp.Oge
 	  ) e1' e2' "tmp" builder
       | A.Unop(op, e) ->
 	  let e' = expr builder e in
 	  (match op with
 	    A.Neg     -> L.build_neg
           | A.Not     -> L.build_not) e' "tmp" builder
-      (*| A.Assign (s, e) -> let e' = expr builder e in
-	                   ignore (L.build_store e' (lookup s) builder); e'*)
+      | A.Assign (s, e) -> let e' = expr builder e in
+	                   ignore (L.build_store e' (lookup s) builder); e'
       | A.Call ("print", [e]) | A.Call ("printb", [e]) ->
-	  L.build_call printf_func [| str_format_str ; (expr builder e) |]
+	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
 	    "printf" builder
       | A.Call ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
