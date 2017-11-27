@@ -26,7 +26,7 @@ let translate (globals, functions) =
   and str_t  = L.pointer_type (L.i8_type context)
   and float_t = L.float_type  context 
   and void_t = L.void_type context 
-  and vector_t = L.vector_type context in
+  and struct_t = L.struct_type (context, [|L.float_type;L.float_type|], true) in
   
 
   let ltype_of_typ = function
@@ -35,7 +35,7 @@ let translate (globals, functions) =
     | A.Bool -> i1_t
     | A.Float -> float_t
     | A.Void -> void_t 
-    | A.Complex -> vector_t  in
+    | A.Complex -> struct_t  in
 
   
   let pointer_wrapper =
@@ -48,7 +48,7 @@ let translate (globals, functions) =
   ["int"; "string"; "void"; "bool";"float";"cx"]
   [[L.pointer_type i32_t; i32_t; i32_t];
   [L.pointer_type str_t; i32_t; i32_t];
-  [L.pointer_type void_t; i32_t; i32_t]; [L.pointer_type i1_t; i32_t; i32_t];[L.pointer_type float_t;i32_t; i32_t];[L.pointer_type vector_t;i32_t; i32_t]]
+  [L.pointer_type void_t; i32_t; i32_t]; [L.pointer_type i1_t; i32_t; i32_t];[L.pointer_type float_t;i32_t; i32_t];[L.pointer_type struct_t;i32_t; i32_t]]
   
   (* Declare each global variable; remember its value in a map *)
   let global_vars =
@@ -66,13 +66,9 @@ let translate (globals, functions) =
   let printbig_t = L.function_type i32_t [| i32_t |] in
   let printbig_func = L.declare_function "printbig" printbig_t the_module in
 
+  let printcx_t = L.function_type i32_t [|L.pointer_type i8_t;L.pointer_type i8_t|] in 
+  let printcx_func = L.declare_function "printcx" printcx_t the_module in 
 
-
-
-
-
-
-  
 
   (* Define each function (arguments and return type) so we can call it *)
   let function_decls =
@@ -91,8 +87,9 @@ let translate (globals, functions) =
 
     (*let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in*)
     (* let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in *)
-    let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
-  
+    (*let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in*)
+    let cx_format_str = L.build_global_stringptr "%f , %f" "fmt" builder in
+    
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -122,17 +119,19 @@ let translate (globals, functions) =
     A.IntLit i -> L.const_int i32_t i
       | A.FloatLit f -> L.const_float float_t f
       | A.StrLit s -> L.build_global_stringptr s "string" builder
+      | A.CxLit (c,d) -> L.struct_set_body "cx" float_t c d true
       | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
       | A.Noexpr -> L.const_int i32_t 0
       | A.Id s -> L.build_load (lookup s) s builder
        | A.Binop (e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in
+    |A.Int->
 	  (match op with
 	    A.Add     -> L.build_add
 	  | A.Sub     -> L.build_sub
 	  | A.Mult    -> L.build_mul
-          | A.Div     -> L.build_sdiv
+    | A.Div     -> L.build_sdiv
 	  | A.And     -> L.build_and
 	  | A.Or      -> L.build_or
 	  | A.Equal   -> L.build_icmp L.Icmp.Eq
@@ -142,6 +141,19 @@ let translate (globals, functions) =
 	  | A.Greater -> L.build_icmp L.Icmp.Sgt
 	  | A.Geq     -> L.build_icmp L.Icmp.Sge
 	  ) e1' e2' "tmp" builder
+    | A.Complex -> (match op with
+                A.Add     -> (L.build_fadd,L.build_fadd)
+              | A.Sub     -> (L.build_fsub,L.build_fsub)
+              | A.Mult    -> L.build_fmul
+              | A.Div     -> L.build_fdiv
+              | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+              | A.Neq     -> L.build_fcmp L.Fcmp.One
+              | A.Less    -> L.build_fcmp L.Fcmp.Ult
+              | A.Leq     -> L.build_fcmp L.Fcmp.Ole
+              | A.Greater -> L.build_fcmp L.Fcmp.Ogt
+              | A.Geq     -> L.build_fcmp L.Fcmp.Oge
+              | _ -> raise E.InvalidBinaryOperation 
+              ) e1' e2' "tmp" builder
       | A.Unop(op, e) ->
 	  let e' = expr builder e in
 	  (match op with
@@ -151,8 +163,7 @@ let translate (globals, functions) =
 	                   ignore (L.build_store e' (lookup s) builder); e'*)
       | A.Call ("print", [e]) | A.Call ("printb", [e]) ->
 
-	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
-    "printf" builder
+	  L.build_call printf_func [| float_format_str ; (expr builder e) |] "printf" builder
       | A.Call ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
       | A.Call (f, act) ->

@@ -5,11 +5,9 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-<<<<<<< HEAD
-type typ = Int | Bool | Void | String | Complex | Float  
-=======
-type typ = Int | Bool | Void | String (*| Complex*) | Float
->>>>>>> b089bb1e49fcdf9fccd537a13d878bacee1551b0
+
+type typ = Int | Bool | Void | String | Complex | Float 
+
 
 type bind = typ * string
 
@@ -17,13 +15,9 @@ type expr =
     IntLit of int
   | StrLit of string
   | BoolLit of bool
-<<<<<<< HEAD
   | CxLit of  float * float
   | FloatLit of float
-=======
-  | FloatLit of float
-  (*| CxLit of float * float*)
->>>>>>> b089bb1e49fcdf9fccd537a13d878bacee1551b0
+
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
