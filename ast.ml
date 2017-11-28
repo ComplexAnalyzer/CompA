@@ -5,7 +5,14 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String | Float
+type typ = 
+    Int 
+  | Bool 
+  | Void 
+  | String 
+  | Float
+  | Matrix1DType of typ * int
+  | Matrix2DType of typ * int * int
 
 type bind = typ * string
 
@@ -88,11 +95,14 @@ let rec string_of_stmt = function
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
-let string_of_typ = function
+let rec string_of_typ = function
     Int -> "int"
   | Float -> "float"
   | Bool -> "bool"
   | Void -> "void"
+  | String -> "string"
+  | Matrix1DType(t, l) -> string_of_typ t ^ "[" ^ string_of_int l ^ "]"
+  | Matrix2DType(t, l1, l2) ->string_of_typ t ^ "[" ^ string_of_int l1 ^ "][" ^ string_of_int l2 ^ "]"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
