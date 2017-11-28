@@ -67,6 +67,23 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "!"
 
+let string_of_matrix m =
+  let rec string_of_matrix_lit = function
+      [] -> "]"
+    | [hd] -> (match hd with
+                IntLit(l) -> string_of_int i
+              | FloatLit(f) -> string_of_float i
+              | (* Complex Numbers *)
+              | _ -> raise(Failure("illegal expression in matrix"))
+              ) ^ string_of_matrix_lit []
+    | hd::tl -> (match hd with
+                  IntLit(l) -> string_of_int l ^ ", "
+                | FloatLit(f) -> string_of_float f ^ ", "
+                | (* Complex Numbers *)
+                | _ -> raise(Failure("illegal expression in matrix"))
+                ) ^ string_of_matrix_lit tl
+  in "[" ^ string_of_matrix_lit m
+
 let rec string_of_expr = function
     IntLit(l) -> string_of_int l
   | FloatLit(f) -> string_of_float f
