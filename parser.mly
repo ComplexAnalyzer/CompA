@@ -1,4 +1,4 @@
-/* Ocamlyacc parser for CompA */
+(* Ocamlyacc parser for CompA *)
 
 %{
 open Ast
@@ -15,6 +15,8 @@ open Ast
 
 %nonassoc NOELSE
 %nonassoc ELSE
+%nonassoc NOLSQRBR
+%nonassoc LSQRBR
 %right ASSIGN
 %left OR
 %left AND
@@ -59,6 +61,14 @@ typ:
   | STRING { String }
   | BOOL { Bool }
   | VOID { Void }
+  | matrix_1d_type { $1 }
+  | matrix_2d_type { $1 }
+
+matrix_1d_type:
+  typ LSQRBR INTLIT RSQRBR %prec NOLSQRBR { Matrix1DType($1, $3) }
+
+matrix_2d_type:
+  typ LSQRBR INTLIT RSQRBR LSQRBR INTLIT RSQRBR { Matrix2DType($1, $3, $6) }
 
 vdecl_list:
     /* nothing */    { [] }
