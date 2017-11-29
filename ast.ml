@@ -1,11 +1,11 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
-          And | Or
+          And | Or 
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String | Float
+type typ = Int | Bool | Void | String | Float | Matrix | Complex 
 
 type bind = typ * string
 
@@ -19,6 +19,7 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
+  | Cx of expr * expr
   | Noexpr
 
 type stmt =
@@ -55,6 +56,7 @@ let string_of_op = function
   | Geq -> ">="
   | And -> "&&"
   | Or -> "||"
+  
 
 let string_of_uop = function
     Neg -> "-"
@@ -67,8 +69,8 @@ let rec string_of_expr = function
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
-  | Binop(e1, o, e2) ->
-      string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
+  | Cx(e1,e2) -> "(" ^ string_of_expr e1 ^","^string_of_expr e2^")"
+  | Binop(e1, o, e2) ->string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2)
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
@@ -93,6 +95,8 @@ let string_of_typ = function
   | Float -> "float"
   | Bool -> "bool"
   | Void -> "void"
+  | Complex -> "cx"
+  | Matrix ->  "mx"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

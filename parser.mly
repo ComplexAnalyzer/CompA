@@ -4,10 +4,10 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE LSQRBR RSQRBR COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LSQRBR RSQRBR
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT FLOAT BOOL STRING VOID
+%token RETURN IF ELSE FOR WHILE INT FLOAT BOOL STRING VOID COMPLEX 
 %token <int> INTLIT
 %token <float> FLOATLIT
 %token <string> ID STRLIT
@@ -93,6 +93,7 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | LPAREN expr COMMA expr RPAREN { Cx($2,$4) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }

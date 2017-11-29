@@ -47,14 +47,14 @@ let check (globals, functions) =
     (List.map (fun fd -> fd.fname) functions);
 
   (* Function declaration for a named function *)
-  let built_in_decls =  StringMap.add "print"
-     { typ = Void; fname = "print"; formals = [(Int, "x")];
-       locals = []; body = [] } (StringMap.add "printb"
-     { typ = Void; fname = "printb"; formals = [(Bool, "x")];
-       locals = []; body = [] } (StringMap.singleton "printbig"
-     { typ = Void; fname = "printbig"; formals = [(Int, "x")];
-       locals = []; body = [] }))
-   in
+  let built_in_decls = List.fold_left
+   (fun map (name, t) -> StringMap.add name t map)
+   StringMap.empty
+    [ ("print", { typ = Void; fname = "print"; formals = [(Int, "x")]; body = [] });
+      ("printb", { typ = Void; fname = "printb"; formals = [(Bool, "x")]; body = [] });
+      ("printc", { typ = Void; fname = "printc"; formals = [(Complex, "x")]; body = [] });
+    ]
+  in
      
   let function_decls = List.fold_left (fun m fd -> StringMap.add fd.fname fd m)
                          built_in_decls functions
@@ -95,6 +95,7 @@ let check (globals, functions) =
 	Literal _ -> Int
       | BoolLit _ -> Bool
       | Id s -> type_of_identifier s
+      | Cx (e1,e2) as cx -> let t1 =  expr e1 and t2 = expr e2 in when t1 = Float && t2 = Float -> Complex
       | Binop(e1, op, e2) as e -> let t1 = expr e1 and t2 = expr e2 in
 	(match op with
           Add | Sub | Mult | Div when t1 = Int && t2 = Int -> Int
