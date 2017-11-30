@@ -64,6 +64,9 @@ typ:
   | matrix_1d_type { $1 }
   | matrix_2d_type { $1 }
 
+complex_type:
+  typ LPAREN FLOATLIT COMMA FLOATLIT RPAREN { ComplexType($1, $3, $5) }
+
 matrix_1d_type:
   typ LSQRBR INTLIT RSQRBR %prec NOLSQRBR { Matrix1DType($1, $3) }
 
