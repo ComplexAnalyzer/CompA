@@ -17,7 +17,8 @@ let _ =
   let usage_msg = "usage: ./compa.native [-a|-l|-c] [file.mc]" in
   let channel = ref stdin in
   Arg.parse speclist (fun filename -> channel := open_in filename) usage_msg;
-  let lexbuf = Lexing.from_channel !channel in
+  let lexbuf = Lexing.from_string (Preprocess.process_files Sys.argv.(2) Sys.argv.(3) ) in
+  (*let lexbuf = Lexing.from_channel !channel in*)
   let ast = Parser.program Scanner.token lexbuf in
   (* Semant.check ast; *)
   match !action with
