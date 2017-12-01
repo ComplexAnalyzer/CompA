@@ -54,8 +54,8 @@ rule token = parse
 | "bool"   { BOOL }
 | "string" { STRING }
 | "float"  { FLOAT }
-(*| "cx"     { COMPLEX }*)
-(*| "mx"     { MATRIX }*)
+| "cx"     { COMPLEX }
+
 
 (* Data Values *)
 | "void"   { VOID }

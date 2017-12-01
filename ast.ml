@@ -1,11 +1,11 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
-          And | Or
+          And | Or 
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String | Float
+type typ = Int | Bool | Void | String | Float | Complex | Illegal
 
 type bind = typ * string
 
@@ -19,6 +19,7 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
+  | Cx of expr * expr
   | Noexpr
 
 type stmt =
@@ -55,6 +56,7 @@ let string_of_op = function
   | Geq -> ">="
   | And -> "&&"
   | Or -> "||"
+  
 
 let string_of_uop = function
     Neg -> "-"
@@ -67,8 +69,8 @@ let rec string_of_expr = function
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
-  | Binop(e1, o, e2) ->
-      string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
+  | Cx(e1,e2) -> "(" ^ string_of_expr e1 ^","^string_of_expr e2^")"
+  | Binop(e1, o, e2) -> string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
@@ -83,10 +85,9 @@ let rec string_of_stmt = function
   | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
   | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
-  | For(e1, e2, e3, s) ->
-      "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
+  | For(e1, e2, e3, s) -> "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
-  | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
+  | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s 
 
 let string_of_typ = function
     Int -> "int"
@@ -94,6 +95,10 @@ let string_of_typ = function
   | Bool -> "bool"
   | Void -> "void"
   | String -> "string"
+  | Complex -> "cx"
+  
+  
+>>>>>>> a4e92c6355a7d5018c8e331238b204a3bd4ba2dd
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

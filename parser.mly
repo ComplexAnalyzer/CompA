@@ -4,10 +4,10 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE LSQRBR RSQRBR COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LSQRBR RSQRBR
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT FLOAT BOOL STRING VOID
+%token RETURN IF ELSE FOR WHILE INT FLOAT BOOL STRING VOID COMPLEX 
 %token <int> INTLIT
 %token <float> FLOATLIT
 %token <string> ID STRLIT
@@ -61,6 +61,7 @@ typ:
   | STRING { String }
   | BOOL { Bool }
   | VOID { Void }
+(*<<<<<<< HEAD
   | matrix_1d_type { $1 }
   | matrix_2d_type { $1 }
 
@@ -72,6 +73,9 @@ matrix_1d_type:
 
 matrix_2d_type:
   typ LSQRBR INTLIT RSQRBR LSQRBR INTLIT RSQRBR { Matrix2DType($1, $3, $6) }
+=======*)
+  | COMPLEX {Complex}
+>>>>>>> a4e92c6355a7d5018c8e331238b204a3bd4ba2dd
 
 vdecl_list:
     /* nothing */    { [] }
@@ -106,6 +110,7 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | LPAREN expr COMMA expr RPAREN { Cx($2,$4) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
