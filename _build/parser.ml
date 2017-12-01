@@ -628,7 +628,7 @@ let yyact = [|
     let _4 = (Parsing.peek_val __caml_parser_env 1 : 'expr) in
     Obj.repr(
 # 96 "parser.mly"
-                                  ( Binop(_2, Cxo, _4) )
+                                  ( Cx(_2,_4) )
 # 633 "parser.ml"
                : 'expr))
 ; (fun __caml_parser_env ->
