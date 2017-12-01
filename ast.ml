@@ -26,6 +26,9 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
+  | MatrixLit of expr list
+  | Matrix1DAccess of string * expr
+  | Matrix2DAccess of string * expr * expr
   | Noexpr
 
 type stmt =
@@ -67,12 +70,12 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "!"
 
-let string_of_matrix m =
+let string_of_matrix mx =
   let rec string_of_matrix_lit = function
       [] -> "]"
     | [hd] -> (match hd with
-                IntLit(l) -> string_of_int i
-              | FloatLit(f) -> string_of_float i
+                IntLit(l) -> string_of_int l
+              | FloatLit(f) -> string_of_float f
               | (* Complex Numbers *)
               | _ -> raise(Failure("illegal expression in matrix"))
               ) ^ string_of_matrix_lit []
@@ -82,7 +85,7 @@ let string_of_matrix m =
                 | (* Complex Numbers *)
                 | _ -> raise(Failure("illegal expression in matrix"))
                 ) ^ string_of_matrix_lit tl
-  in "[" ^ string_of_matrix_lit m
+  in "[" ^ string_of_matrix_lit mx
 
 let rec string_of_expr = function
     IntLit(l) -> string_of_int l
@@ -97,6 +100,9 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | MatrixLit(mx) -> string_of_matrix mx
+  | Matrix1DAccess(s, e) -> s ^ "[" ^ string_of_expr e ^ "]"
+  | Matrix2DAccess(s, e1, e2) -> s ^ "[" ^ string_of_expr e1 ^ "][" ^ string_of_expr e2 ^ "]"
   | Noexpr -> ""
 
 let rec string_of_stmt = function
