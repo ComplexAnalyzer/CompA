@@ -31,10 +31,21 @@ rule token = parse
 | '/'      { DIVIDE }
 | '='      { ASSIGN }
 
+(* Complex operators *)
+| '^'      { HAT }
+| "exp"	   { EXPO }  
+| "conj"   { CONJ }
+| '|'	   { VERTLINE }
+| 'e'	   { E }
+
+(* Matrix operators *)
+| "tp"     { TRPO }
+| "dt" 	   { DET }
+
 (* Logical Operators *)
 | "=="     { EQ }
 | "!="     { NEQ }
-| '<'      { LT }
+| "<"      { LT }
 | "<="     { LEQ }
 | ">"      { GT }
 | ">="     { GEQ }
@@ -76,3 +87,11 @@ rule token = parse
 and comment = parse
   "*/" { token lexbuf }
 | _    { comment lexbuf }
+
+
+
+
+
+
+
+
