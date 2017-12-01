@@ -59,6 +59,7 @@ typ:
   | STRING { String }
   | BOOL { Bool }
   | VOID { Void }
+  | COMPLEX {Complex}
 
 vdecl_list:
     /* nothing */    { [] }

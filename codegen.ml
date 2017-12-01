@@ -29,6 +29,7 @@ let translate (globals, functions) =
   and void_t = L.void_type context
   and float_t= L.double_type context in
   let cx_t = L.array_type float_t 2 in
+  let cx_pointer_t = L.pointer_type cx_t in
 
 let ltype_of_typ = function
       A.Int -> i32_t
@@ -98,7 +99,7 @@ let ltype_of_typ = function
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
     let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
     let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
-    let cx_format_str = L.build_global_stringptr "(%f,%f)\n" "fmt" builder in
+    let cx_format_str = L.build_global_stringptr "hello\n" "fmt" builder in
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -217,6 +218,9 @@ let ltype_of_typ = function
       |A.Int -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
       "printf" builder
       |A.String -> L.build_call printf_func [| str_format_str ; (expr builder e) |]
+      "printf" builder
+      |A.Complex  ->
+       L.build_call printf_func [| cx_format_str ; (expr builder e)|]
       "printf" builder
       )
       |A.Call ("printcx", [e1;e2])  ->
