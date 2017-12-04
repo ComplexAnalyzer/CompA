@@ -29,7 +29,9 @@ let translate (globals, functions) =
   and void_t = L.void_type context
   and float_t= L.double_type context in
   let cx_t = L.array_type float_t 2 in
-  let cx_pointer_t = L.pointer_type cx_t in
+  (*let cx_pointer_t = L.pointer_type float_t in*)
+  (*let cx_fst = L.extractvalue cx_t 1 in*)
+  (*let cx_snd = L.extractvalue cx_t 2 in*)
 
 let ltype_of_typ = function
       A.Int -> i32_t
@@ -67,8 +69,8 @@ let ltype_of_typ = function
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
 
-  let printcx_t = L.var_arg_function_type i32_t [| float_t;float_t |] in
-  let printcx_func = L.declare_function "printcx" printf_t the_module in
+  (*let printcx_t = L.var_arg_function_type i32_t [| cx_fst;cx_snd |] in
+  let printcx_func = L.declare_function "printcx" printf_t the_module in*)
   
   (*let s = build_global_stringptr "Hello, world!\n" "" builder in
   let zero = const_int i32_t 0 in
@@ -99,7 +101,7 @@ let ltype_of_typ = function
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
     let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
     let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
-    let cx_format_str = L.build_global_stringptr "hello\n" "fmt" builder in
+    let cx_format_str = L.build_global_stringptr "(%f,%f)\n" "fmt" builder in
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -126,6 +128,7 @@ let ltype_of_typ = function
     in
     let type_of_identifier s = 
         let symbols = check_func in StringMap.find s symbols in
+
 
   let rec check_type = function
    A.IntLit _ -> A.Int

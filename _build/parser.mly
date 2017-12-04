@@ -1,4 +1,3 @@
-/* Ocamlyacc parser for CompA */
 
 %{
 open Ast
@@ -15,6 +14,8 @@ open Ast
 
 %nonassoc NOELSE
 %nonassoc ELSE
+%nonassoc NOLSQRBR
+%nonassoc LSQRBR
 %right ASSIGN
 %left OR
 %left AND
