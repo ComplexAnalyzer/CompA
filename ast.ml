@@ -12,7 +12,7 @@ type typ =
   | String 
   | Float
   | Matrix1DType of typ * int
-  | Matrix2DType of typ * int * int
+(* | Matrix2DType of typ * int * int *)
 
 type bind = typ * string
 
@@ -28,14 +28,15 @@ type expr =
   | Call of string * expr list
   | MatrixLit of expr list
   | Matrix1DAccess of string * expr
-  | Matrix2DAccess of string * expr * expr
+(* | Matrix2DAccess of string * expr * expr *)
+  | Len of string
   | Noexpr
 
 type stmt =
     Block of stmt list
   | Expr of expr
   | Return of expr
-  | Assign of string * expr
+  | Assign of string * expr (* Why Assign in both expr and stmt? *)
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
   | While of expr * stmt
@@ -102,7 +103,8 @@ let rec string_of_expr = function
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | MatrixLit(mx) -> string_of_matrix mx
   | Matrix1DAccess(s, e) -> s ^ "[" ^ string_of_expr e ^ "]"
-  | Matrix2DAccess(s, e1, e2) -> s ^ "[" ^ string_of_expr e1 ^ "][" ^ string_of_expr e2 ^ "]"
+(* | Matrix2DAccess(s, e1, e2) -> s ^ "[" ^ string_of_expr e1 ^ "][" ^ string_of_expr e2 ^ "]" *)
+  | Len(s) -> "len(" ^ s ^ ")"
   | Noexpr -> ""
 
 let rec string_of_stmt = function
@@ -125,7 +127,7 @@ let rec string_of_typ = function
   | Void -> "void"
   | String -> "string"
   | Matrix1DType(t, l) -> string_of_typ t ^ "[" ^ string_of_int l ^ "]"
-  | Matrix2DType(t, l1, l2) ->string_of_typ t ^ "[" ^ string_of_int l1 ^ "][" ^ string_of_int l2 ^ "]"
+(* | Matrix2DType(t, l1, l2) ->string_of_typ t ^ "[" ^ string_of_int l1 ^ "][" ^ string_of_int l2 ^ "]" *)
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
