@@ -12,6 +12,7 @@ open Ast
 %token <float> FLOATLIT
 %token <string> ID STRLIT
 %token EOF
+%token LEN
 
 %nonassoc NOELSE
 %nonassoc ELSE
@@ -62,13 +63,15 @@ typ:
   | BOOL { Bool }
   | VOID { Void }
   | matrix_1d_type { $1 }
-  | matrix_2d_type { $1 }
+/* | matrix_2d_type { $1 } */
 
 matrix_1d_type:
   typ LSQRBR INTLIT RSQRBR %prec NOLSQRBR { Matrix1DType($1, $3) }
 
+/*
 matrix_2d_type:
   typ LSQRBR INTLIT RSQRBR LSQRBR INTLIT RSQRBR { Matrix2DType($1, $3, $6) }
+*/
 
 vdecl_list:
     /* nothing */    { [] }
@@ -97,8 +100,7 @@ expr_opt:
   | expr          { $1 }
 
 expr:
-    INTLIT           { IntLit($1) }
-  | FLOATLIT         { FloatLit($1) }
+    numbers          { $1 }
   | STRLIT           { StrLit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
@@ -117,9 +119,20 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | ID ASSIGN expr   { Assign($1, $3) }
+  | expr ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+  | LSQRBR matrix_elements RSQRBR { MatrixLit(List.rev $2) }
+  | ID LSQRBR expr RSQRBR %prec NOLSQRBR { Matrix1DAccess($1, $3) }
+  | LEN LPAREN ID RPAREN { Len($3) }
+
+numbers:
+    INTLIT           { IntLit($1) }
+  | FLOATLIT         { FloatLit($1) }
+
+matrix_elements:
+    numbers                       { [$1] }
+  | matrix_elements COMMA numbers { $3 :: $1 }
 
 actuals_opt:
     /* nothing */ { [] }

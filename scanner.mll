@@ -42,6 +42,9 @@ rule token = parse
 | "||"     { OR }
 | "!"      { NOT }
 
+(* Matrix Operators *)
+| "len"    { LEN }
+
 (* Control Flow *)
 | "if"     { IF }
 | "else"   { ELSE }
@@ -54,11 +57,11 @@ rule token = parse
 | "bool"   { BOOL }
 | "string" { STRING }
 | "float"  { FLOAT }
+| "void"   { VOID }
 (*| "cx"     { COMPLEX }
 | "mx"     { MATRIX }*)
 
 (* Data Values *)
-| "void"   { VOID }
 | "true"   { TRUE }
 | "false"  { FALSE }
 | string_literal { STRLIT(s) }
