@@ -122,13 +122,9 @@ let translate (globals, functions) =
       StringMap.empty (globals @ fdecl.A.formals @ fdecl.A.locals)
     in
 
-    let type_of_identifier s =
+    let type_of_id s =
       let symbols = check_function in
         StringMap.find s symbols
-    in
-
-    let build_matrix_1D_argument s builder =
-      L.build_in_bounds_gep (lookup s) [| L.const_int i32_t 0; L.const_int i32_t 0 |] s builder
     in
 
     let build_matrix_1D_access s i1 i2 builder isAssign =
@@ -137,12 +133,32 @@ let translate (globals, functions) =
       else
         L.build_load (L.build_gep (lookup s) [| i1; i2 |]) s builder
     in
-    
+
+    let rec matrix_expression e =
+      match e with
+        A.IntLit i -> i
+      | A.Binop (e1, op, e2) -> (match op with
+                                  A.Add -> (matrix_expression e1) + (matrix_expression e2)
+                                | A.Sub -> (matrix_expression e1) - (matrix_expression e2)
+                                | A.Mul -> (matrix_expression e1) * (matrix_expression e2)
+                                | A.Div -> (matrix_expression e1) / (matrix_expression e2)
+                                | _ -> 0
+                                )
+      | _ -> 0
+    in
+
+    let type_of_matrix mx =
+      match (List.hd mx) with
+        A.IntLit _ -> ltype_of_typ (A.Int)
+      | A.FloatLit _ -> ltype_of_typ (A.Float)
+      | _ -> raise(Failure("illegal matrix type"))
+    in
+
     (* Construct code for an expression; return its value *)
     let rec expr builder = function
 	(*TODO*)
     (* A.Literal i -> L.const_int i32_t i*)
-    A.IntLit i -> L.const_int i32_t i
+        A.IntLit i -> L.const_int i32_t i
       | A.FloatLit f -> L.const_float float_t f
       | A.StrLit s -> L.build_global_stringptr s "string" builder
       | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
