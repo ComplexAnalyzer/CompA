@@ -25,7 +25,8 @@ let translate (globals, functions) =
   and i1_t   = L.i1_type   context
   and str_t  = L.pointer_type (L.i8_type context)
   and void_t = L.void_type context
-  and float_t= L.double_type context in
+  and float_t= L.double_type context
+  and array_t = L.array_type in
 
   let ltype_of_typ = function
       A.Int -> i32_t
@@ -33,7 +34,11 @@ let translate (globals, functions) =
     | A.String -> str_t
     | A.Bool -> i1_t
     | A.Void -> void_t in
-  
+    | A.Matrix1DType(typ, size) -> (match typ with
+                                      A.Int -> array_t i32_t size
+                                    | A.Float -> array_t float_t size
+                                    | _ -> raise(Failure("illegal expression in matrix"))
+                                   ) in
   (*
   let pointer_wrapper =
     List.fold_left (fun m name -> StringMap.add name (L.named_struct_type context name) m)
@@ -86,8 +91,8 @@ let translate (globals, functions) =
     let (the_function, _) = StringMap.find fdecl.A.fname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    (*let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in*)
-    let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
+    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
+    and float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
     (*let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in*)
   
     (* Construct the function's "locals": formal arguments and locally
@@ -112,6 +117,27 @@ let translate (globals, functions) =
                    with Not_found -> StringMap.find n global_vars
     in
 
+    let check_function =
+      List.fold_left (fun m (t, n)) -> StringMap.add n t m
+      StringMap.empty (globals @ fdecl.A.formals @ fdecl.A.locals)
+    in
+
+    let type_of_identifier s =
+      let symbols = check_function in
+        StringMap.find s symbols
+    in
+
+    let build_matrix_1D_argument s builder =
+      L.build_in_bounds_gep (lookup s) [| L.const_int i32_t 0; L.const_int i32_t 0 |] s builder
+    in
+
+    let build_matrix_1D_access s i1 i2 builder isAssign =
+      if isAssign
+        then L.build_gep (lookup s) [| i1; i2 |] s builder
+      else
+        L.build_load (L.build_gep (lookup s) [| i1; i2 |]) s builder
+    in
+    
     (* Construct code for an expression; return its value *)
     let rec expr builder = function
 	(*TODO*)
