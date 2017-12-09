@@ -21,6 +21,8 @@ type expr =
   | Call of string * expr list
   | Cx of expr * expr
   | Noexpr
+  | Column of string
+  | Row of string
 
 type stmt =
     Block of stmt list
@@ -75,6 +77,10 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+
+  | Column(s) -> "column(" ^ s ^ ")"
+  | Row(s) -> "row(" ^ s ^ ")"
+
   | Noexpr -> ""
 
 let rec string_of_stmt = function
