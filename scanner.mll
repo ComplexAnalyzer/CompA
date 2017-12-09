@@ -31,10 +31,21 @@ rule token = parse
 | '/'      { DIVIDE }
 | '='      { ASSIGN }
 
+(* Complex operators *)
+| '^'      { HAT }
+| "exp"	   { EXPO }  
+| "conj"   { CONJ }
+| '|'	   { VERTLINE }
+| 'e'	   { E }
+
+(* Matrix operators *)
+| "tp"     { TRPO }
+| "dt" 	   { DET }
+
 (* Logical Operators *)
 | "=="     { EQ }
 | "!="     { NEQ }
-| '<'      { LT }
+| "<"      { LT }
 | "<="     { LEQ }
 | ">"      { GT }
 | ">="     { GEQ }
@@ -54,8 +65,11 @@ rule token = parse
 | "bool"   { BOOL }
 | "string" { STRING }
 | "float"  { FLOAT }
-| "cx"     { COMPLEX }
+(*| "cx"     { COMPLEX }
+| "mx"     { MATRIX }*)
 
+(* Matrices *)
+| "row" { ROW } | "column" { COLUMN }
 
 (* Data Values *)
 | "void"   { VOID }
@@ -75,4 +89,4 @@ rule token = parse
 
 and comment = parse
   "*/" { token lexbuf }
-| _    { comment lexbuf }
+| _    { comment lexbuf }2

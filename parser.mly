@@ -8,6 +8,8 @@ open Ast
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT FLOAT BOOL STRING VOID COMPLEX 
+/* matrices */
+%token COLUMN ROW
 %token <int> INTLIT
 %token <float> FLOATLIT
 %token <string> ID STRLIT
@@ -120,6 +122,11 @@ expr:
   | expr LT     expr { Binop($1, Less,  $3) }
   | expr LEQ    expr { Binop($1, Leq,   $3) }
   | expr GT     expr { Binop($1, Greater, $3) }
+
+  | COLUMN LPAREN ID RPAREN { Column($3) }
+  | ROW LPAREN ID RPAREN  { Row($3) }
+
+
   | expr GEQ    expr { Binop($1, Geq,   $3) }
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }

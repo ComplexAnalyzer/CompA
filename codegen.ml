@@ -1,21 +1,14 @@
 (* Code generation: translate takes a semantically checked AST and
 produces LLVM IR
-
 LLVM tutorial: Make sure to read the OCaml version of the tutorial
-
 http://llvm.org/docs/tutorial/index.html
-
 Detailed documentation on the OCaml LLVM library:
-
 http://llvm.moe/
 http://llvm.moe/ocaml/
-
 *)
 
 module L = Llvm
 module A = Ast
-module Semant = Semant 
-
 
 module StringMap = Map.Make(String)
 
@@ -27,18 +20,20 @@ let translate (globals, functions) =
   and i1_t   = L.i1_type   context
   and str_t  = L.pointer_type (L.i8_type context)
   and void_t = L.void_type context
-  and float_t= L.double_type context in
-  let cx_t = L.array_type float_t 2 in
-  let cx_pointer_t = L.pointer_type cx_t in
+  and float_t= L.double_type context
+  and array_t = L.array_type in
 
-let ltype_of_typ = function
+  let ltype_of_typ = function
       A.Int -> i32_t
     | A.Float -> float_t
     | A.String -> str_t
     | A.Bool -> i1_t
-    | A.Void -> void_t
-    | A.Complex -> cx_t in
-  
+    | A.Void -> void_t in
+    | A.Matrix1DType(typ, size) -> (match typ with
+                                      A.Int -> array_t i32_t size
+                                    | A.Float -> array_t float_t size
+                                    | _ -> raise(Failure("illegal expression in matrix"))
+                                   ) in
   (*
   let pointer_wrapper =
     List.fold_left (fun m name -> StringMap.add name (L.named_struct_type context name) m)
@@ -54,21 +49,16 @@ let ltype_of_typ = function
   *)
   
   (* Declare each global variable; remember its value in a map *)
-  
   let global_vars =
     let global_var m (t, n) =
       let init = L.const_int (ltype_of_typ t) 0
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
-
   
   (* Declare printf(), which the print built-in function will call *)
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
-
-  let printcx_t = L.var_arg_function_type i32_t [| float_t;float_t |] in
-  let printcx_func = L.declare_function "printcx" printf_t the_module in
   
   (*let s = build_global_stringptr "Hello, world!\n" "" builder in
   let zero = const_int i32_t 0 in
@@ -86,7 +76,7 @@ let ltype_of_typ = function
     let function_decl m fdecl =
       let name = fdecl.A.fname
       and formal_types =
-	Array.of_list (List.map (fun (t,_) -> ltype_of_typ t) fdecl.A.formals)
+  Array.of_list (List.map (fun (t,_) -> ltype_of_typ t) fdecl.A.formals)
       in let ftype = L.function_type (ltype_of_typ fdecl.A.typ) formal_types in
       StringMap.add name (L.define_function name ftype the_module, fdecl) m in
     List.fold_left function_decl StringMap.empty functions in
@@ -96,22 +86,22 @@ let ltype_of_typ = function
     let (the_function, _) = StringMap.find fdecl.A.fname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
-    let cx_format_str = L.build_global_stringptr "hello\n" "fmt" builder in
+    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
+    and float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
+    (*let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in*)
+  
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
     let local_vars =
       let add_formal m (t, n) p = L.set_value_name n p;
-	let local = L.build_alloca (ltype_of_typ t) n builder in
-	ignore (L.build_store p local builder);
-	StringMap.add n local m in
+  let local = L.build_alloca (ltype_of_typ t) n builder in
+  ignore (L.build_store p local builder);
+  StringMap.add n local m in
 
       let add_local m (t, n) =
-	let local_var = L.build_alloca (ltype_of_typ t) n builder
-	in StringMap.add n local_var m in
+  let local_var = L.build_alloca (ltype_of_typ t) n builder
+  in StringMap.add n local_var m in
 
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.A.formals
           (Array.to_list (L.params the_function)) in
@@ -119,118 +109,90 @@ let ltype_of_typ = function
 
     (* Return the value for a variable or formal argument *)
     let lookup n = try StringMap.find n local_vars
-                   with Not_found -> StringMap.find n global_vars in
-    let check_func = 
-          List.fold_left(fun m(t,n) -> StringMap.add n t m )
-          StringMap.empty(globals@fdecl.A.formals@fdecl.A.locals)
+                   with Not_found -> StringMap.find n global_vars
     in
-    let type_of_identifier s = 
-        let symbols = check_func in StringMap.find s symbols in
 
-  let rec check_type = function
-   A.IntLit _ -> A.Int
-  |A.FloatLit _-> A.Float
-  |A.StrLit _-> A.String
-      | A.BoolLit _ -> A.Bool
-      | A.Id s -> type_of_identifier s
-      | A.Cx(e1,e2) -> let t1 =  check_type e1 and t2 = check_type e2 in ( match t1 with A.Float when t2= A.Float -> A.Complex)
-      | A.Binop(e1, op, e2) -> let t1 = check_type e1 and t2 = check_type e2 in
-  (match op with
-          Add | Sub | Mult | Div when t1 = A.Int && t2 = A.Int -> A.Int
-  | Add | Sub | Mult | Div when t1 = A.Complex && t2 = A.Complex -> A.Complex
-  | Add | Sub | Mult | Div when t1 = A.Float && t2 = A.Float -> A.Float
-  | Equal | Neq when t1 = t2 -> A.Bool
-  | Less | Leq | Greater | Geq when t1 = A.Int && t2 = A.Int -> A.Bool
-  | And | Or when t1 = A.Bool && t2 = A.Bool -> A.Bool
-        | _ -> A.Illegal
-  )
-  | A.Unop(op, e)  -> let t = check_type e in
-   (match op with
-     Neg when t = A.Int -> A.Int
-   | Not when t = A.Bool -> A.Bool
-   | Neg when t = A.Complex -> A.Complex
-   | Neg when t = A.Float -> A.Float
-   | _ -> Illegal)
-   | A.Noexpr -> A.Void
-   | A.Assign(_, e)  -> check_type e                            
-   | A.Call(fname, actuals) as call -> A.Illegal 
-   
-    
+    let check_function =
+      List.fold_left (fun m (t, n)) -> StringMap.add n t m
+      StringMap.empty (globals @ fdecl.A.formals @ fdecl.A.locals)
+    in
 
-    (*check type of a expression*)
+    let type_of_id s =
+      let symbols = check_function in
+        StringMap.find s symbols
+    in
 
+    let build_matrix_1D_access s i1 i2 builder isAssign =
+      if isAssign
+        then L.build_gep (lookup s) [| i1; i2 |] s builder
+      else
+        L.build_load (L.build_gep (lookup s) [| i1; i2 |]) s builder
+    in
+
+    let rec matrix_expression e =
+      match e with
+        A.IntLit i -> i
+      | A.Binop (e1, op, e2) -> (match op with
+                                  A.Add -> (matrix_expression e1) + (matrix_expression e2)
+                                | A.Sub -> (matrix_expression e1) - (matrix_expression e2)
+                                | A.Mul -> (matrix_expression e1) * (matrix_expression e2)
+                                | A.Div -> (matrix_expression e1) / (matrix_expression e2)
+                                | _ -> 0
+                                )
+      | _ -> 0
+    in
+
+    let type_of_matrix mx =
+      match (List.hd mx) with
+        A.IntLit _ -> ltype_of_typ (A.Int)
+      | A.FloatLit _ -> ltype_of_typ (A.Float)
+      | A.BoolLit _ -> ltype_of_typ (A.Bool)
+      | _ -> raise(Failure("illegal matrix type"))
+    in
 
     (* Construct code for an expression; return its value *)
-    and expr builder = function
-	(*TODO*)
+    let rec expr builder = function
+  (*TODO*)
     (* A.Literal i -> L.const_int i32_t i*)
-    A.IntLit i -> L.const_int i32_t i
+        A.IntLit i -> L.const_int i32_t i
       | A.FloatLit f -> L.const_float float_t f
       | A.StrLit s -> L.build_global_stringptr s "string" builder
       | A.BoolLit b -> L.const_int i1_t (if b then 1 else 0)
       | A.Noexpr -> L.const_int i32_t 0
       | A.Id s -> L.build_load (lookup s) s builder
-      | A.Cx(e1,e2) -> 
-      let e1' = expr builder e1
-      and e2' = expr builder e2 in L.const_array float_t [|e1';e2'|] 
-      | A.Binop (e1, op, e2) ->
-       let e1' = expr builder e1
-       and e2' = expr builder e2 
-       and typ = check_type e1 in
-       (if typ = A.Float then
-	  (match op with
-	    A.Add     -> L.build_fadd
-	  | A.Sub     -> L.build_fsub
-	  | A.Mult    -> L.build_fmul
-    | A.Div     -> L.build_fdiv
-	  | A.And     -> L.build_and
-	  | A.Or      -> L.build_or
-	  | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
-	  | A.Neq     -> L.build_fcmp L.Fcmp.One
-	  | A.Less    -> L.build_fcmp L.Fcmp.Ult
-	  | A.Leq     -> L.build_fcmp L.Fcmp.Ole
-	  | A.Greater -> L.build_fcmp L.Fcmp.Ogt
-	  | A.Geq     -> L.build_fcmp L.Fcmp.Oge
-	  ) e1' e2' "tmp" builder else (match op with
-      A.Add     -> L.build_add
-    | A.Sub     -> L.build_sub
-    | A.Mult    -> L.build_mul
-    | A.Div     -> L.build_sdiv
+       | A.Binop (e1, op, e2) ->
+    let e1' = expr builder e1
+    and e2' = expr builder e2 in
+    (match op with
+      A.Add     -> L.build_fadd
+    | A.Sub     -> L.build_fsub
+    | A.Mult    -> L.build_fmul
+          | A.Div     -> L.build_fdiv
     | A.And     -> L.build_and
     | A.Or      -> L.build_or
-    | A.Equal   -> L.build_icmp L.Icmp.Eq
-    | A.Neq     -> L.build_icmp L.Icmp.Ne
-    | A.Less    -> L.build_icmp L.Icmp.Slt
-    | A.Leq     -> L.build_icmp L.Icmp.Sle
-    | A.Greater -> L.build_icmp L.Icmp.Sgt
-    | A.Geq     -> L.build_icmp L.Icmp.Sge
-    ) e1' e2' "tmp" builder)
+    | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+    | A.Neq     -> L.build_fcmp L.Fcmp.One
+    | A.Less    -> L.build_fcmp L.Fcmp.Ult
+    | A.Leq     -> L.build_fcmp L.Fcmp.Ole
+    | A.Greater -> L.build_fcmp L.Fcmp.Ogt
+    | A.Geq     -> L.build_fcmp L.Fcmp.Oge
+    ) e1' e2' "tmp" builder
       | A.Unop(op, e) ->
-	  let e' = expr builder e in
-	  (match op with
-	    A.Neg     -> L.build_neg
-      | A.Not     -> L.build_not) e' "tmp" builder
+    let e' = expr builder e in
+    (match op with
+      A.Neg     -> L.build_neg
+          | A.Not     -> L.build_not) e' "tmp" builder
       | A.Assign (s, e) -> let e' = expr builder e in
-	                   ignore (L.build_store e' (lookup s) builder); e'
-      | A.Call ("print", [e]) | A.Call ("printb", [e]) -> (match check_type e with 
-      A.Float -> L.build_call printf_func [| float_format_str ; (expr builder e) |]
-	    "printf" builder
-      |A.Int -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
+                     ignore (L.build_store e' (lookup s) builder); e'
+      | A.Call ("print", [e]) | A.Call ("printb", [e]) ->
+    L.build_call printf_func [| float_format_str ; (expr builder e) |]
       "printf" builder
-      |A.String -> L.build_call printf_func [| str_format_str ; (expr builder e) |]
-      "printf" builder
-      |A.Complex  ->
-       L.build_call printf_func [| cx_format_str ; (expr builder e)|]
-      "printf" builder
-      )
-      |A.Call ("printcx", [e1;e2])  ->
-    L.build_call printf_func [| cx_format_str ; (expr builder e1);(expr builder e2)|]
-      "printcx" builder
-    
+      | A.Call ("printbig", [e]) ->
+    L.build_call printbig_func [| (expr builder e) |] "printbig" builder
       | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
-	 let actuals = List.rev (List.map (expr builder) (List.rev act)) in
-	 let result = (match fdecl.A.typ with A.Void -> ""
+   let actuals = List.rev (List.map (expr builder) (List.rev act)) in
+   let result = (match fdecl.A.typ with A.Void -> ""
                                             | _ -> f ^ "_result") in
          L.build_call fdef (Array.of_list actuals) result builder
     in
@@ -239,49 +201,49 @@ let ltype_of_typ = function
        have a terminal (e.g., a branch). *)
     let add_terminal builder f =
       match L.block_terminator (L.insertion_block builder) with
-	Some _ -> ()
+  Some _ -> ()
       | None -> ignore (f builder) in
-	
+  
     (* Build the code for the given statement; return the builder for
        the statement's successor *)
     let rec stmt builder = function
-	A.Block sl -> List.fold_left stmt builder sl
+  A.Block sl -> List.fold_left stmt builder sl
       | A.Expr e -> ignore (expr builder e); builder
       | A.Return e -> ignore (match fdecl.A.typ with
-	  A.Void -> L.build_ret_void builder
-	| _ -> L.build_ret (expr builder e) builder); builder
+    A.Void -> L.build_ret_void builder
+  | _ -> L.build_ret (expr builder e) builder); builder
       | A.If (predicate, then_stmt, else_stmt) ->
          let bool_val = expr builder predicate in
-	 let merge_bb = L.append_block context "merge" the_function in
+   let merge_bb = L.append_block context "merge" the_function in
 
-	 let then_bb = L.append_block context "then" the_function in
-	 add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
-	   (L.build_br merge_bb);
+   let then_bb = L.append_block context "then" the_function in
+   add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+     (L.build_br merge_bb);
 
-	 let else_bb = L.append_block context "else" the_function in
-	 add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
-	   (L.build_br merge_bb);
+   let else_bb = L.append_block context "else" the_function in
+   add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+     (L.build_br merge_bb);
 
-	 ignore (L.build_cond_br bool_val then_bb else_bb builder);
-	 L.builder_at_end context merge_bb
+   ignore (L.build_cond_br bool_val then_bb else_bb builder);
+   L.builder_at_end context merge_bb
 
       | A.While (predicate, body) ->
-	  let pred_bb = L.append_block context "while" the_function in
-	  ignore (L.build_br pred_bb builder);
+    let pred_bb = L.append_block context "while" the_function in
+    ignore (L.build_br pred_bb builder);
 
-	  let body_bb = L.append_block context "while_body" the_function in
-	  add_terminal (stmt (L.builder_at_end context body_bb) body)
-	    (L.build_br pred_bb);
+    let body_bb = L.append_block context "while_body" the_function in
+    add_terminal (stmt (L.builder_at_end context body_bb) body)
+      (L.build_br pred_bb);
 
-	  let pred_builder = L.builder_at_end context pred_bb in
-	  let bool_val = expr pred_builder predicate in
+    let pred_builder = L.builder_at_end context pred_bb in
+    let bool_val = expr pred_builder predicate in
 
-	  let merge_bb = L.append_block context "merge" the_function in
-	  ignore (L.build_cond_br bool_val body_bb merge_bb pred_builder);
-	  L.builder_at_end context merge_bb
+    let merge_bb = L.append_block context "merge" the_function in
+    ignore (L.build_cond_br bool_val body_bb merge_bb pred_builder);
+    L.builder_at_end context merge_bb
 
       | A.For (e1, e2, e3, body) -> stmt builder
-	    ( A.Block [A.Expr e1 ; A.While (e2, A.Block [body ; A.Expr e3]) ] )
+      ( A.Block [A.Expr e1 ; A.While (e2, A.Block [body ; A.Expr e3]) ] )
     in
 
     (* Build the code for each statement in the function *)
