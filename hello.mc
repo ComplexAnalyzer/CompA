@@ -7,7 +7,7 @@ int main()
     float a3;
     float a4;
     float a5;
-
+    
     cx c1;
     cx c2;
     cx c3;
@@ -16,13 +16,13 @@ int main()
     cx c6;
 
     int i1;
-    int i2;
-    int i3；
-    int i4；
+    int i2;    
+    int i3;
+    int i4;
     int i5;
-  
+
     print("VBbigidiot");
-   
+
     a1= sqrt(93.2);
     print(a1);
     
@@ -59,11 +59,8 @@ int main()
     a2 = max(2.0,3.0);
     print(a2);
     
-    a3 = rnd(a5);
+    a3 =rnd(a5);
     print(a3);
-
-
-
 
     c1 =vbBigidiot((9.0,11.2),(9.0,11.5));
     print(c1);
@@ -71,10 +68,7 @@ int main()
     print(a1);
     i2 = vblovesCOR( 2, 4);
     print(i2);
-
-    print(s2);
-    
-
+       
     return 0;
 }
 
@@ -96,8 +90,7 @@ int vblovesCOR( int a, int b){
     int result;
     result = a + b;
     return result;
-
-
 } 
+
 
 
