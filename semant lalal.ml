@@ -49,11 +49,9 @@ let check (globals, functions) =
   report_duplicate (fun n -> "duplicate function " ^ n)
     (List.map (fun fd -> fd.fname) functions);
 
-
-   
   (* Function declaration for a named function *)
-     let built_in_decls =  StringMap.add "print"
-     { typ = Void; fname = "print"; formals = [( Float, "x")];
+  let built_in_decls =  StringMap.add "print"
+     { typ = Void; fname = "print"; formals = [( Float , "x")];
        locals = []; body = [] } (StringMap.add "sqrt"
      { typ = Float; fname = "sqrt"; formals = [(Float,"x")];
        locals = [];body =  []   } (StringMap.add "sin"
@@ -76,13 +74,10 @@ let check (globals, functions) =
      { typ = Float; fname = "min"; formals = [(Float,"x");(Float,"y")];
        locals = [];body =  []   } (StringMap.add "max"
      { typ = Float; fname = "max"; formals = [(Float,"x");(Float,"y")];
-       locals = []; body =  []   } (StringMap.add "rnd"
+       locals = []; body =  []   } (StringMap.singleton "rnd"
      { typ = Float; fname = "rnd"; formals = [(Float,"x")];
-       locals = []; body =  []   }(StringMap.singleton "printbig"
-     { typ = Void; fname = "printbig"; formals = [(Int, "x")];
-       locals = []; body = [] })))))))))))))
-   in
-     
+       locals = []; body =  []   }))))))))))))
+  in    
   let function_decls = List.fold_left (fun m fd -> StringMap.add fd.fname fd m)
                          built_in_decls functions
   in
@@ -119,12 +114,12 @@ let check (globals, functions) =
 
     (* Return the type of an expression or throw an exception *)
     let rec expr = function
-	      IntLit _ -> Int
-      | FloatLit _-> Float
-      | StrLit _-> String
+	     IntLit _ -> Int
+      |FloatLit _-> Float
+      |StrLit _-> String
       | BoolLit _ -> Bool
       | Id s -> type_of_identifier s
-      | ComplexAccess (s, e) -> let _ = (match (expr e) with
+      | A.ComplexAccess (s, e) -> let _ = (match (expr e) with
                                           Int -> Int
                                         | _ -> raise (Failure ("Complex index should be integer"))) in
                                          (type_of_identifier s)
@@ -165,14 +160,12 @@ let check (globals, functions) =
         check_assign lt rt (Failure ("illegal assignment " ^ string_of_typ lt ^
 				     " = " ^ string_of_typ rt ^ " in " ^ 
 				     string_of_expr ex))
-
    | Cxassign(var,e1,e2) as ex -> let lt = type_of_identifier var
                                   and index = expr e1 
                                   and num = expr e2 in
-        check_cxassign lt index num (Failure ("illegal assignment of complex" ^ string_of_typ lt ^
+        check_cxassign lt num (Failure ("illegal assignment of complex" ^ string_of_typ lt ^
              " = " ^ string_of_typ num ^ " in " ^
-             string_of_expr ex  ^ "with" ^ string_of_typ index ))
-
+             string_of_expr ex  ^ "with" string_of_expr index ))
    | Call(fname, actuals) as call -> let fd = function_decl fname in
          if List.length actuals != List.length fd.formals then
            raise (Failure ("expecting " ^ string_of_int

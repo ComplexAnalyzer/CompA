@@ -107,6 +107,9 @@ let ltype_of_typ = function
 
   let roundps = L.declare_function "llvm.trunc.f64"
      (L.function_type float_t [|float_t|]) the_module in
+ 
+  (*let fsinps = L.declare_function "llvm.x87.fsin"
+     (L.function_type float_t [|float_t|]) the_module in*)
 
 
 
@@ -145,6 +148,10 @@ let ltype_of_typ = function
     let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
     let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
     let cx_format_str = L.build_global_stringptr "(%f,%f)\n" "fmt" builder in
+    let intl_format_str = L.build_global_stringptr "%d" "fmt" builder in
+    let floatl_format_str = L.build_global_stringptr "%f" "fmt" builder in
+    let strl_format_str = L.build_global_stringptr "%s" "fmt" builder in
+    let cxl_format_str = L.build_global_stringptr "(%f,%f)" "fmt" builder in
     
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -287,7 +294,7 @@ let ltype_of_typ = function
                                  and e2' = expr builder e2 in                       
                                  let comp = L.build_gep (lookup s) [| L.const_int i32_t 0 ; e1'|] s builder in 
                                  ignore (L.build_store e2' comp builder); e2'
-      | A.Call ("print", [e]) | A.Call ("printb", [e]) -> (match check_type e with 
+      | A.Call ("println", [e]) -> (match check_type e with 
       A.Float -> L.build_call printf_func [| float_format_str ; (expr builder e) |]
 	    "printf" builder
       |A.Int -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
@@ -296,6 +303,17 @@ let ltype_of_typ = function
       "printf" builder
       |A.Complex  ->
        L.build_call printf_func [| cx_format_str ; (expr builder e)|]
+      "printf" builder
+      )
+      |A.Call ("print", [e]) ->(match check_type e with 
+       A.Float -> L.build_call printf_func [| floatl_format_str ; (expr builder e) |]
+      "printf" builder
+      |A.Int -> L.build_call printf_func [| intl_format_str ; (expr builder e) |]
+      "printf" builder
+      |A.String -> L.build_call printf_func [| strl_format_str ; (expr builder e) |]
+      "printf" builder
+      |A.Complex  ->
+       L.build_call printf_func [| cxl_format_str ; (expr builder e)|]
       "printf" builder
       )
       |A.Call ("sqrt", [e1])  -> L.build_call sqrtps [| (expr builder e1)|] "sqrt" builder 
@@ -310,6 +328,7 @@ let ltype_of_typ = function
       |A.Call ("min", [e1;e2])  -> L.build_call minps [| (expr builder e1);(expr builder e2)|] "fabs" builder 
       |A.Call ("max", [e1;e2])  -> L.build_call maxps [| (expr builder e1);(expr builder e2)|] "max" builder                                                                               
       |A.Call ("rnd", [e1])  -> L.build_call roundps [| (expr builder e1)|] "rnd" builder
+      (*|A.Call ("fsin", [e1])  -> L.build_call fsinps [| (expr builder e1)|] "fsin" builder*)
       | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let actuals = List.rev (List.map (expr builder) (List.rev act)) in
