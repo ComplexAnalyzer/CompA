@@ -179,6 +179,10 @@ let check (globals, functions) =
              (List.length fd.formals) ^ " arguments in " ^ string_of_expr call))
          else
            List.iter2 ( fun (ft, _) e -> let et = expr e in
+              if et = Complex then ignore (check_assign ft Float
+                (Failure ("illegal actual argument found " ^ string_of_typ et ^
+                " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e)))
+              else 
               ignore (check_assign ft et
                 (Failure ("illegal actual argument found " ^ string_of_typ et ^
                 " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e))))

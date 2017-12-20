@@ -3,12 +3,14 @@
 int main()
 {   
     float a1;
-    
+    cx c;
 
 
-    a1= sin(-1.57) ;
+
+    c = (0.9,3.2);
+    a1= euler((3.3,2)) ;
    
-    print(a1);
+    print(c);
     return 0;
     
 }
