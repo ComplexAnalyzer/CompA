@@ -93,6 +93,22 @@ let ltype_of_typ = function
   let logps = L.declare_function "llvm.log.*"
      (L.function_type float_t [|float_t |]) the_module in
 
+  let log10ps = L.declare_function "llvm.log10.*"
+     (L.function_type float_t [|float_t |]) the_module in
+
+  let fabsps = L.declare_function "llvm.fabs.*"
+     (L.function_type float_t [|float_t |]) the_module in
+
+  let minps = L.declare_function "llvm.minnum.*"
+     (L.function_type float_t [|float_t;float_t  |]) the_module in
+
+  let maxps = L.declare_function "llvm.maxnum.*"
+     (L.function_type float_t [|float_t;float_t|]) the_module in
+
+  let roundps = L.declare_function "llvm.trunc.*"
+     (L.function_type float_t [|float_t|]) the_module in
+
+
 
 
 
@@ -283,8 +299,12 @@ let ltype_of_typ = function
       |A.Call ("powi", [e1;e2])  -> L.build_call powips [| (expr builder e1);(expr builder e2)|] "powi" builder
       |A.Call ("pow", [e1;e2])  -> L.build_call powps [| (expr builder e1);(expr builder e2)|] "pow" builder   
       |A.Call ("exp", [e1])  -> L.build_call expps [| (expr builder e1)|] "exp" builder 
-      |A.Call ("log", [e1])  -> L.build_call logps [| (expr builder e1)|] "log" builder             
-    
+      |A.Call ("log", [e1])  -> L.build_call logps [| (expr builder e1)|] "log" builder 
+      |A.Call ("log10", [e1])  -> L.build_call log10ps [| (expr builder e1)|] "log10" builder 
+      |A.Call ("fabs", [e1])  -> L.build_call fabsps [| (expr builder e1)|] "fabs" builder 
+      |A.Call ("min", [e1;e2])  -> L.build_call minps [| (expr builder e1);(expr builder e2)|] "fabs" builder 
+      |A.Call ("max", [e1;e2])  -> L.build_call maxps [| (expr builder e1);(expr builder e2)|] "max" builder                                                                               
+      |A.Call ("rnd", [e1])  -> L.build_call roundps [| (expr builder e1)|] "rnd" builder
       | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let actuals = List.rev (List.map (expr builder) (List.rev act)) in
