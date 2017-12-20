@@ -1,1 +1,1 @@
-compa.ml: Array Ast Codegen Lexing List Llvm Llvm_analysis Parser Preprocess Scanner Semant Sys
+compa.ml: Array Ast Codegen Lexing List Llvm Llvm_analysis Parser Scanner String Sys
