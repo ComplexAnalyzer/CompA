@@ -87,6 +87,14 @@ let ltype_of_typ = function
      (L.function_type float_t [|float_t; float_t |]) the_module in
 
 
+  let expps = L.declare_function "llvm.exp.*"
+     (L.function_type float_t [|float_t |]) the_module in
+
+  let logps = L.declare_function "llvm.log.*"
+     (L.function_type float_t [|float_t |]) the_module in
+
+
+
 
 
   
@@ -273,7 +281,9 @@ let ltype_of_typ = function
       |A.Call ("sin", [e1])  -> L.build_call sinps [| (expr builder e1)|] "sin" builder
       |A.Call ("cos", [e1])  -> L.build_call cosps [| (expr builder e1)|] "cos" builder
       |A.Call ("powi", [e1;e2])  -> L.build_call powips [| (expr builder e1);(expr builder e2)|] "powi" builder
-      |A.Call ("pow", [e1;e2])  -> L.build_call powps [| (expr builder e1);(expr builder e2)|] "pow" builder     
+      |A.Call ("pow", [e1;e2])  -> L.build_call powps [| (expr builder e1);(expr builder e2)|] "pow" builder   
+      |A.Call ("exp", [e1])  -> L.build_call expps [| (expr builder e1)|] "exp" builder 
+      |A.Call ("log", [e1])  -> L.build_call logps [| (expr builder e1)|] "log" builder             
     
       | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
