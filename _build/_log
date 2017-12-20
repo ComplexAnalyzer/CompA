@@ -1,6 +1,6 @@
 ### Starting build.
 # Target: compa.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:compa.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package llvm.analysis -package llvm -modules compa.ml > compa.ml.depends
+ocamlfind ocamldep -package llvm.analysis -package llvm -modules compa.ml > compa.ml.depends # cached
 # Target: ast.ml.depends, tags: { package(llvm), package(llvm.analysis), extension:ml, file:ast.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -package llvm.analysis -package llvm -modules ast.ml > ast.ml.depends # cached
 # Target: ast.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, quiet }
@@ -26,7 +26,7 @@ ocamlfind ocamldep -package llvm.analysis -package llvm -modules scanner.ml > sc
 # Target: scanner.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:scanner.cmo, file:scanner.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o scanner.cmo scanner.ml # cached
 # Target: compa.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:compa.cmo, file:compa.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmo compa.ml
+ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmo compa.ml # cached
 # Target: ast.cmx, tags: { package(llvm), package(llvm.analysis), compile, extension:cmx, extension:ml, file:ast.cmx, file:ast.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o ast.cmx ast.ml # cached
 # Target: semant.cmx, tags: { package(llvm), package(llvm.analysis), compile, extension:cmx, extension:ml, file:semant.cmx, file:semant.ml, implem, native, ocaml, quiet }
@@ -40,7 +40,7 @@ ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o parser.cmx
 # Target: scanner.cmx, tags: { package(llvm), package(llvm.analysis), compile, extension:cmx, extension:ml, file:scanner.cmx, file:scanner.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o scanner.cmx scanner.ml # cached
 # Target: compa.cmx, tags: { package(llvm), package(llvm.analysis), compile, extension:cmx, extension:ml, file:compa.cmx, file:compa.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmx compa.ml
+ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmx compa.ml # cached
 # Target: compa.native, tags: { package(llvm), package(llvm.analysis), dont_link_with, extension:native, file:compa.native, link, native, ocaml, program, quiet }
-ocamlfind ocamlopt -linkpkg -package llvm.analysis -package llvm ast.cmx semant.cmx codegen.cmx parser.cmx scanner.cmx compa.cmx -o compa.native
+ocamlfind ocamlopt -linkpkg -package llvm.analysis -package llvm ast.cmx semant.cmx codegen.cmx parser.cmx scanner.cmx compa.cmx -o compa.native # cached
 # Compilation successful.

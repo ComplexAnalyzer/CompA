@@ -21,6 +21,7 @@ type token =
   | GEQ
   | TRUE
   | FALSE
+  | PI
   | AND
   | OR
   | RETURN

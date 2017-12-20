@@ -7,6 +7,7 @@ int main()
     float a3;
     float a4;
     float a5;
+
     
     cx c1;
     cx c2;
@@ -23,8 +24,9 @@ int main()
 
     print("VBbigidiot");
 
-    a1= sqrt(93.2);
-    print(a1);
+    a1= sqrt(93.2) ;
+    a2 =a1 * PI;
+    print(a2);
     
     a2 = sin(32.2);
     print(a2);

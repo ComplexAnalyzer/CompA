@@ -7,7 +7,7 @@ type uop = Neg | Not
 
 type typ = Int | Bool | Void | String | Float | Complex | Illegal
 
-type bind = typ * string
+type bind = typ * string 
 
 type expr =
     IntLit of int

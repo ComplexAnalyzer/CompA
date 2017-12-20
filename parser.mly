@@ -5,7 +5,7 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LSQRBR RSQRBR
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
-%token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
+%token EQ NEQ LT LEQ GT GEQ TRUE FALSE PI AND OR
 %token RETURN IF ELSE FOR WHILE INT FLOAT BOOL STRING VOID COMPLEX 
 %token <int> INTLIT
 %token <float> FLOATLIT
@@ -94,6 +94,7 @@ expr:
   | STRLIT           { StrLit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
+  | PI               { FloatLit(3.1415926535897932384626433832795) }
   | ID               { Id($1) }
   | ID LSQRBR expr RSQRBR { ComplexAccess($1, $3) }
   | ID LSQRBR expr RSQRBR ASSIGN expr { Cxassign($1, $3, $6) }
