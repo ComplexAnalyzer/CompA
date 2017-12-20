@@ -67,7 +67,7 @@ let ltype_of_typ = function
 
 
   
-  (* Declare printf(), which the print built-in function will call x86.sse.sqrt.ps*)
+  (* Declare printf(), which the print built-in function will call *)
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
 
@@ -272,9 +272,14 @@ let ltype_of_typ = function
     ) e1' e2' "tmp" builder)
       | A.Unop(op, e) ->
 	  let e' = expr builder e in
+    let t = check_type e in
 	  (match op with
-	    A.Neg     -> L.build_neg
+	      A.Neg when t = A.Int -> L.build_neg
+      | A.Neg when t = A.Float -> L.build_fneg
       | A.Not     -> L.build_not) e' "tmp" builder
+
+
+
       | A.Assign (s, e) -> let e' = expr builder e in             
 	                   ignore (L.build_store e' (lookup s) builder); e'
 

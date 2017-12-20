@@ -73,6 +73,7 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | FloatLit(3.1415926535897932384626433832795) -> string_of_float 3.1415926535897932384626433832795 
   | Id(s) -> s
+  | ComplexAccess(s, e1) -> s ^ " = " ^"[" ^ string_of_expr e1 ^"]" 
   | Cx(e1,e2) -> "(" ^ string_of_expr e1 ^ "," ^ string_of_expr e2 ^ ")"
   | Binop(e1, o, e2) -> string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e

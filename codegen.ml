@@ -272,9 +272,14 @@ let ltype_of_typ = function
     ) e1' e2' "tmp" builder)
       | A.Unop(op, e) ->
 	  let e' = expr builder e in
+    let t = check_type e in
 	  (match op with
-	    A.Neg     -> L.build_neg
+	      A.Neg when t = A.Int -> L.build_neg
+      | A.Neg when t = A.Float -> L.build_fneg
       | A.Not     -> L.build_not) e' "tmp" builder
+
+
+
       | A.Assign (s, e) -> let e' = expr builder e in             
 	                   ignore (L.build_store e' (lookup s) builder); e'
 
