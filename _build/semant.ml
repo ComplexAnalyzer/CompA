@@ -119,9 +119,9 @@ let check (globals, functions) =
 
     (* Return the type of an expression or throw an exception *)
     let rec expr = function
-	     IntLit _ -> Int
-      |FloatLit _-> Float
-      |StrLit _-> String
+	      IntLit _ -> Int
+      | FloatLit _-> Float
+      | StrLit _-> String
       | BoolLit _ -> Bool
       | Id s -> type_of_identifier s
       | ComplexAccess (s, e) -> let _ = (match (expr e) with

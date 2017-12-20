@@ -71,41 +71,41 @@ let ltype_of_typ = function
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
 
-  let sqrtps = L.declare_function "llvm.x86.sse.sqrt.ps"
+  let sqrtps = L.declare_function "llvm.sqrt.f64"    
      (L.function_type float_t [|float_t|]) the_module in
 
-  let sinps = L.declare_function "llvm.sin.*"
+  let sinps = L.declare_function "llvm.sin.f64"
      (L.function_type float_t [|float_t|]) the_module in
 
-  let cosps = L.declare_function "llvm.cos.*"
+  let cosps = L.declare_function "llvm.cos.f64"
      (L.function_type float_t [|float_t|]) the_module in
 
-  let powips = L.declare_function "llvm.powi.*"
+  let powips = L.declare_function "llvm.powi.f64"
      (L.function_type float_t [|float_t; i32_t |]) the_module in
 
-  let powps = L.declare_function "llvm.pow.*"
+  let powps = L.declare_function "llvm.pow.f64"
      (L.function_type float_t [|float_t; float_t |]) the_module in
 
 
-  let expps = L.declare_function "llvm.exp.*"
+  let expps = L.declare_function "llvm.exp.f64"
      (L.function_type float_t [|float_t |]) the_module in
 
-  let logps = L.declare_function "llvm.log.*"
+  let logps = L.declare_function "llvm.log.f64"
      (L.function_type float_t [|float_t |]) the_module in
 
-  let log10ps = L.declare_function "llvm.log10.*"
+  let log10ps = L.declare_function "llvm.log10.f64"
      (L.function_type float_t [|float_t |]) the_module in
 
-  let fabsps = L.declare_function "llvm.fabs.*"
+  let fabsps = L.declare_function "llvm.fabs.f64"
      (L.function_type float_t [|float_t |]) the_module in
 
-  let minps = L.declare_function "llvm.minnum.*"
+  let minps = L.declare_function "llvm.minnum.f64"
      (L.function_type float_t [|float_t;float_t  |]) the_module in
 
-  let maxps = L.declare_function "llvm.maxnum.*"
+  let maxps = L.declare_function "llvm.maxnum.f64"
      (L.function_type float_t [|float_t;float_t|]) the_module in
 
-  let roundps = L.declare_function "llvm.trunc.*"
+  let roundps = L.declare_function "llvm.trunc.f64"
      (L.function_type float_t [|float_t|]) the_module in
 
 

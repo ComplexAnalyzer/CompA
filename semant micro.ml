@@ -1,13 +1,14 @@
-(*Semantic checking for the CompA *)
+(* Semantic checking for the MicroC compiler *)
 
 open Ast
-module StringMap = Map.Make(String)
-(* module E = Exceptions *)
 
+module StringMap = Map.Make(String)
 
 (* Semantic checking of a program. Returns void if successful,
    throws an exception if something is wrong.
+
    Check each global variable, then check each function *)
+
 let check (globals, functions) =
 
   (* Raise an exception if the given list has a duplicate *)
@@ -30,11 +31,7 @@ let check (globals, functions) =
   let check_assign lvaluet rvaluet err =
      if lvaluet == rvaluet then lvaluet else raise err
   in
-
-  let check_cxassign lvaluec index rvaluec err =
-     if lvaluec == Complex && index== Int && rvaluec == Float then lvaluec else raise err
-  in
-  
+   
   (**** Checking Global Variables ****)
 
   List.iter (check_not_void (fun n -> "illegal void global " ^ n)) globals;
@@ -49,38 +46,14 @@ let check (globals, functions) =
   report_duplicate (fun n -> "duplicate function " ^ n)
     (List.map (fun fd -> fd.fname) functions);
 
-
-   
   (* Function declaration for a named function *)
-     let built_in_decls =  StringMap.add "print"
-     { typ = Void; fname = "print"; formals = [( Float, "x")];
-       locals = []; body = [] } (StringMap.add "sqrt"
-     { typ = Float; fname = "sqrt"; formals = [(Float,"x")];
-       locals = [];body =  []   } (StringMap.add "sin"
-     { typ = Float; fname = "sin"; formals = [(Float,"x")];
-       locals = [];body =  []   } (StringMap.add "cos"
-     { typ = Float; fname = "cos"; formals = [(Float,"x")];
-       locals = [];body =  []   } (StringMap.add "powi"
-     { typ = Float; fname = "powi"; formals = [(Float,"x");(Int,"y")];
-       locals = [];body =  []   } (StringMap.add "pow"
-     { typ = Float; fname = "pow"; formals = [(Float,"x");(Float,"y")];
-       locals = [];body =  []   } (StringMap.add "exp"
-     { typ = Float; fname = "exp"; formals = [(Float,"x")];
-       locals = [];body =  []   } (StringMap.add "log"
-     { typ = Float; fname = "log"; formals = [(Float,"x")];
-       locals = [];body =  []   } (StringMap.add "log10"
-     { typ = Float; fname = "log10"; formals = [(Float,"x")];
-       locals = [];body =  []   } (StringMap.add "fabs"
-     { typ = Float; fname = "fabs"; formals = [(Float,"x")];
-       locals = []; body =  []   } (StringMap.add "min"
-     { typ = Float; fname = "min"; formals = [(Float,"x");(Float,"y")];
-       locals = [];body =  []   } (StringMap.add "max"
-     { typ = Float; fname = "max"; formals = [(Float,"x");(Float,"y")];
-       locals = []; body =  []   } (StringMap.add "rnd"
-     { typ = Float; fname = "rnd"; formals = [(Float,"x")];
-       locals = []; body =  []   }(StringMap.singleton "printbig"
+  let built_in_decls =  StringMap.add "print"
+     { typ = Void; fname = "print"; formals = [(Int, "x")];
+       locals = []; body = [] } (StringMap.add "printb"
+     { typ = Void; fname = "printb"; formals = [(Bool, "x")];
+       locals = []; body = [] } (StringMap.singleton "printbig"
      { typ = Void; fname = "printbig"; formals = [(Int, "x")];
-       locals = []; body = [] })))))))))))))
+       locals = []; body = [] }))
    in
      
   let function_decls = List.fold_left (fun m fd -> StringMap.add fd.fname fd m)
@@ -119,33 +92,14 @@ let check (globals, functions) =
 
     (* Return the type of an expression or throw an exception *)
     let rec expr = function
-	      IntLit _ -> Int
-      | FloatLit _-> Float
-      | StrLit _-> String
-      | BoolLit _ -> Bool
+	      IntLit _  -> Int
+      | BoolLit _  -> Bool
       | Id s -> type_of_identifier s
-      | ComplexAccess (s, e) -> let _ = (match (expr e) with
-                                          Int -> Int
-                                        | _ -> raise (Failure ("Complex index should be integer"))) in
-                                         (type_of_identifier s)
-      | Cx(e1,e2) -> let t1 =  expr e1 and t2 = expr e2 in 
-                      ( match t1 with 
-                        Float -> (match t2 with 
-                                  Float -> Complex
-                                | _ -> raise (Failure ("illegal element type of Complex number " ^
-                                       string_of_typ t2 ^" in " ^ string_of_expr e2)))
-                        |_ -> raise (Failure ("illegal element type of Complex number " ^
-                              string_of_typ t1 ^" in " ^ string_of_expr e1))
-                      )
-
       | Binop(e1, op, e2) as e -> let t1 = expr e1 and t2 = expr e2 in
 	(match op with
           Add | Sub | Mult | Div when t1 = Int && t2 = Int -> Int
-  | Add | Sub | Mult | Div when t1 = Complex && t2 = Complex -> Complex
-  | Add | Sub | Mult | Div when t1 = Float && t2 = Float -> Float
 	| Equal | Neq when t1 = t2 -> Bool
 	| Less | Leq | Greater | Geq when t1 = Int && t2 = Int -> Bool
-  | Less | Leq | Greater | Geq when t1 = Float && t2 = Float -> Bool
 	| And | Or when t1 = Bool && t2 = Bool -> Bool
         | _ -> raise (Failure ("illegal binary operator " ^
               string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
@@ -155,25 +109,15 @@ let check (globals, functions) =
 	 (match op with
 	   Neg when t = Int -> Int
 	 | Not when t = Bool -> Bool
-   | Neg when t = Complex -> Complex
-   | Neg when t = Float -> Float
-   | _ -> raise (Failure ("illegal unary operator " ^ string_of_uop op ^
+         | _ -> raise (Failure ("illegal unary operator " ^ string_of_uop op ^
 	  		   string_of_typ t ^ " in " ^ string_of_expr ex)))
-   | Noexpr -> Void
-   | Assign(var, e) as ex ->   let lt = type_of_identifier var
+      | Noexpr -> Void
+      | Assign(var, e) as ex -> let lt = type_of_identifier var
                                 and rt = expr e in
         check_assign lt rt (Failure ("illegal assignment " ^ string_of_typ lt ^
 				     " = " ^ string_of_typ rt ^ " in " ^ 
 				     string_of_expr ex))
-
-   | Cxassign(var,e1,e2) as ex -> let lt = type_of_identifier var
-                                  and index = expr e1 
-                                  and num = expr e2 in
-        check_cxassign lt index num (Failure ("illegal assignment of complex" ^ string_of_typ lt ^
-             " = " ^ string_of_typ num ^ " in " ^
-             string_of_expr ex  ^ "with" ^ string_of_typ index ))
-
-   | Call(fname, actuals) as call -> let fd = function_decl fname in
+      | Call(fname, actuals) as call -> let fd = function_decl fname in
          if List.length actuals != List.length fd.formals then
            raise (Failure ("expecting " ^ string_of_int
              (List.length fd.formals) ^ " arguments in " ^ string_of_expr call))
@@ -184,43 +128,14 @@ let check (globals, functions) =
                 " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e))))
              fd.formals actuals;
            fd.typ
-    and
+    in
 
-    check_bool_expr e = if expr e != Bool
+    let check_bool_expr e = if expr e != Bool
      then raise (Failure ("expected Boolean expression in " ^ string_of_expr e))
-     else () 
-
-
-
-     (*match two ast*)
-  and  expr_to_texpr e  = match e with    
-    IntLit(i)           -> Int
-  | FloatLit(b)         -> Float
-  | StrLit(s)           -> String
-  | BoolLit(b)          -> Bool
-  | Id(s)               -> expr e
-  | Noexpr              -> Void
-  | Unop(op, e)         -> expr e
-  | Binop(e1, op, e2) as e   -> expr e
-  | Call(_, el) as call        -> expr call
-  | Cx(_,_)           -> Complex
-in
-  (* Library functions *)
-
-(* and texpr_to_type texpr = match texpr with  
-    TIntLit(_, typ)                  -> typ
-  | TFloatLit(_, typ)                -> typ
-  | TStrLit(_, typ)                  -> typ
-  | TBoolLit(_, typ)                 -> typ
-  | TId(_, typ)                      -> typ
-  | TBinop(_, _, _, typ)             -> typ
-  | TUnop(_, _, typ)                 -> typ
-  | TCall(_, _, typ)                 -> typ
-  | TCx(_,_,typ)                     -> typ
-  | TNoexpr                          -> "void" in *)
+     else () in
 
     (* Verify a statement or throw an exception *)
-  let rec stmt = function
+    let rec stmt = function
 	Block sl -> let rec check_block = function
            [Return _ as s] -> stmt s
          | Return _ :: _ -> raise (Failure "nothing may follow a return")
@@ -243,5 +158,3 @@ in
    
   in
   List.iter check_function functions
-
-  
