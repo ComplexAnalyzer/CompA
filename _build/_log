@@ -30,224 +30,224 @@ File "codegen.ml", line 38, characters 19-165:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Illegal
-File "codegen.ml", line 183, characters 5-13:
+File "codegen.ml", line 195, characters 5-13:
 Warning 42: this use of Assign relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 164, characters 73-127:
+File "codegen.ml", line 176, characters 73-127:
 Warning 8: this pattern-matching is not exhaustive.
 All clauses in this pattern-matching are guarded.
-File "codegen.ml", line 167, characters 10-13:
+File "codegen.ml", line 179, characters 10-13:
 Warning 40: Add was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 10-13:
+File "codegen.ml", line 179, characters 10-13:
 Warning 42: this use of Add relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 167, characters 16-19:
+File "codegen.ml", line 179, characters 16-19:
 Warning 40: Sub was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 16-19:
+File "codegen.ml", line 179, characters 16-19:
 Warning 42: this use of Sub relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 167, characters 22-26:
+File "codegen.ml", line 179, characters 22-26:
 Warning 40: Mult was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 22-26:
+File "codegen.ml", line 179, characters 22-26:
 Warning 42: this use of Mult relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 167, characters 29-32:
+File "codegen.ml", line 179, characters 29-32:
 Warning 40: Div was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 29-32:
+File "codegen.ml", line 179, characters 29-32:
 Warning 42: this use of Div relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 4-7:
+File "codegen.ml", line 180, characters 4-7:
 Warning 40: Add was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 4-7:
+File "codegen.ml", line 180, characters 4-7:
 Warning 42: this use of Add relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 10-13:
+File "codegen.ml", line 180, characters 10-13:
 Warning 40: Sub was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 10-13:
+File "codegen.ml", line 180, characters 10-13:
 Warning 42: this use of Sub relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 16-20:
+File "codegen.ml", line 180, characters 16-20:
 Warning 40: Mult was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 16-20:
+File "codegen.ml", line 180, characters 16-20:
 Warning 42: this use of Mult relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 23-26:
+File "codegen.ml", line 180, characters 23-26:
 Warning 40: Div was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 23-26:
+File "codegen.ml", line 180, characters 23-26:
 Warning 42: this use of Div relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 4-7:
+File "codegen.ml", line 181, characters 4-7:
 Warning 40: Add was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 4-7:
+File "codegen.ml", line 181, characters 4-7:
 Warning 42: this use of Add relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 10-13:
+File "codegen.ml", line 181, characters 10-13:
 Warning 40: Sub was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 10-13:
+File "codegen.ml", line 181, characters 10-13:
 Warning 42: this use of Sub relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 16-20:
+File "codegen.ml", line 181, characters 16-20:
 Warning 40: Mult was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 16-20:
+File "codegen.ml", line 181, characters 16-20:
 Warning 42: this use of Mult relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 23-26:
+File "codegen.ml", line 181, characters 23-26:
 Warning 40: Div was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 23-26:
+File "codegen.ml", line 181, characters 23-26:
 Warning 42: this use of Div relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 170, characters 4-9:
+File "codegen.ml", line 182, characters 4-9:
 Warning 40: Equal was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 170, characters 4-9:
+File "codegen.ml", line 182, characters 4-9:
 Warning 42: this use of Equal relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 170, characters 12-15:
+File "codegen.ml", line 182, characters 12-15:
 Warning 40: Neq was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 170, characters 12-15:
+File "codegen.ml", line 182, characters 12-15:
 Warning 42: this use of Neq relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 4-8:
+File "codegen.ml", line 183, characters 4-8:
 Warning 40: Less was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 4-8:
+File "codegen.ml", line 183, characters 4-8:
 Warning 42: this use of Less relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 11-14:
+File "codegen.ml", line 183, characters 11-14:
 Warning 40: Leq was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 11-14:
+File "codegen.ml", line 183, characters 11-14:
 Warning 42: this use of Leq relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 17-24:
+File "codegen.ml", line 183, characters 17-24:
 Warning 40: Greater was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 17-24:
+File "codegen.ml", line 183, characters 17-24:
 Warning 42: this use of Greater relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 27-30:
+File "codegen.ml", line 183, characters 27-30:
 Warning 40: Geq was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 27-30:
+File "codegen.ml", line 183, characters 27-30:
 Warning 42: this use of Geq relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 172, characters 4-7:
+File "codegen.ml", line 184, characters 4-7:
 Warning 40: And was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 172, characters 4-7:
+File "codegen.ml", line 184, characters 4-7:
 Warning 42: this use of And relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 172, characters 10-12:
+File "codegen.ml", line 184, characters 10-12:
 Warning 40: Or was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 172, characters 10-12:
+File "codegen.ml", line 184, characters 10-12:
 Warning 42: this use of Or relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 177, characters 5-8:
+File "codegen.ml", line 189, characters 5-8:
 Warning 40: Neg was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 177, characters 5-8:
+File "codegen.ml", line 189, characters 5-8:
 Warning 42: this use of Neg relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 178, characters 5-8:
+File "codegen.ml", line 190, characters 5-8:
 Warning 40: Not was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 178, characters 5-8:
+File "codegen.ml", line 190, characters 5-8:
 Warning 42: this use of Not relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 179, characters 5-8:
+File "codegen.ml", line 191, characters 5-8:
 Warning 40: Neg was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 179, characters 5-8:
+File "codegen.ml", line 191, characters 5-8:
 Warning 42: this use of Neg relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 180, characters 5-8:
+File "codegen.ml", line 192, characters 5-8:
 Warning 40: Neg was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 180, characters 5-8:
+File "codegen.ml", line 192, characters 5-8:
 Warning 42: this use of Neg relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 181, characters 10-17:
+File "codegen.ml", line 193, characters 10-17:
 Warning 40: Illegal was selected from type A.typ.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 181, characters 10-17:
+File "codegen.ml", line 193, characters 10-17:
 Warning 42: this use of Illegal relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 158, characters 23-1221:
+File "codegen.ml", line 170, characters 23-1221:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Cxassign (_, _, _)|ComplexReference _)
-File "codegen.ml", line 242, characters 8-16:
+File "codegen.ml", line 254, characters 8-16:
 Warning 42: this use of Assign relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 249, characters 58-522:
+File "codegen.ml", line 261, characters 58-522:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Bool|Void|Illegal)
-File "codegen.ml", line 189, characters 23-3563:
+File "codegen.ml", line 201, characters 23-3965:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 ComplexReference _
-File "codegen.ml", line 279, characters 27-1560:
+File "codegen.ml", line 295, characters 27-1560:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Assign (_, _)
 File "codegen.ml", line 31, characters 6-13:
 Warning 26: unused variable f32x4_t.
-File "codegen.ml", line 145, characters 6-28:
+File "codegen.ml", line 157, characters 6-28:
 Warning 26: unused variable build_complex_argument.
-File "codegen.ml", line 153, characters 8-26:
+File "codegen.ml", line 165, characters 8-26:
 Warning 26: unused variable build_complex_real.
-File "codegen.ml", line 184, characters 12-17:
+File "codegen.ml", line 196, characters 12-17:
 Warning 27: unused variable fname.
-File "codegen.ml", line 184, characters 19-26:
+File "codegen.ml", line 196, characters 19-26:
 Warning 27: unused variable actuals.
-File "codegen.ml", line 184, characters 5-35:
+File "codegen.ml", line 196, characters 5-35:
 Warning 26: unused variable call.
-File "codegen.ml", line 185, characters 21-22:
+File "codegen.ml", line 197, characters 21-22:
 Warning 27: unused variable s.
-File "codegen.ml", line 185, characters 24-25:
+File "codegen.ml", line 197, characters 24-25:
 Warning 27: unused variable c.
 # Target: compa.cmo, tags: { package(llvm), package(llvm.analysis), byte, compile, extension:cmo, extension:ml, file:compa.cmo, file:compa.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmo compa.ml
+ocamlfind ocamlc -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmo compa.ml # cached
 # Target: ast.cmx, tags: { package(llvm), package(llvm.analysis), compile, extension:cmx, extension:ml, file:ast.cmx, file:ast.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o ast.cmx ast.ml # cached
 # Target: semant.cmx, tags: { package(llvm), package(llvm.analysis), compile, extension:cmx, extension:ml, file:semant.cmx, file:semant.ml, implem, native, ocaml, quiet }
@@ -265,224 +265,224 @@ File "codegen.ml", line 38, characters 19-165:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Illegal
-File "codegen.ml", line 183, characters 5-13:
+File "codegen.ml", line 195, characters 5-13:
 Warning 42: this use of Assign relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 164, characters 73-127:
+File "codegen.ml", line 176, characters 73-127:
 Warning 8: this pattern-matching is not exhaustive.
 All clauses in this pattern-matching are guarded.
-File "codegen.ml", line 167, characters 10-13:
+File "codegen.ml", line 179, characters 10-13:
 Warning 40: Add was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 10-13:
+File "codegen.ml", line 179, characters 10-13:
 Warning 42: this use of Add relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 167, characters 16-19:
+File "codegen.ml", line 179, characters 16-19:
 Warning 40: Sub was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 16-19:
+File "codegen.ml", line 179, characters 16-19:
 Warning 42: this use of Sub relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 167, characters 22-26:
+File "codegen.ml", line 179, characters 22-26:
 Warning 40: Mult was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 22-26:
+File "codegen.ml", line 179, characters 22-26:
 Warning 42: this use of Mult relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 167, characters 29-32:
+File "codegen.ml", line 179, characters 29-32:
 Warning 40: Div was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 167, characters 29-32:
+File "codegen.ml", line 179, characters 29-32:
 Warning 42: this use of Div relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 4-7:
+File "codegen.ml", line 180, characters 4-7:
 Warning 40: Add was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 4-7:
+File "codegen.ml", line 180, characters 4-7:
 Warning 42: this use of Add relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 10-13:
+File "codegen.ml", line 180, characters 10-13:
 Warning 40: Sub was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 10-13:
+File "codegen.ml", line 180, characters 10-13:
 Warning 42: this use of Sub relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 16-20:
+File "codegen.ml", line 180, characters 16-20:
 Warning 40: Mult was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 16-20:
+File "codegen.ml", line 180, characters 16-20:
 Warning 42: this use of Mult relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 168, characters 23-26:
+File "codegen.ml", line 180, characters 23-26:
 Warning 40: Div was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 168, characters 23-26:
+File "codegen.ml", line 180, characters 23-26:
 Warning 42: this use of Div relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 4-7:
+File "codegen.ml", line 181, characters 4-7:
 Warning 40: Add was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 4-7:
+File "codegen.ml", line 181, characters 4-7:
 Warning 42: this use of Add relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 10-13:
+File "codegen.ml", line 181, characters 10-13:
 Warning 40: Sub was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 10-13:
+File "codegen.ml", line 181, characters 10-13:
 Warning 42: this use of Sub relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 16-20:
+File "codegen.ml", line 181, characters 16-20:
 Warning 40: Mult was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 16-20:
+File "codegen.ml", line 181, characters 16-20:
 Warning 42: this use of Mult relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 169, characters 23-26:
+File "codegen.ml", line 181, characters 23-26:
 Warning 40: Div was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 169, characters 23-26:
+File "codegen.ml", line 181, characters 23-26:
 Warning 42: this use of Div relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 170, characters 4-9:
+File "codegen.ml", line 182, characters 4-9:
 Warning 40: Equal was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 170, characters 4-9:
+File "codegen.ml", line 182, characters 4-9:
 Warning 42: this use of Equal relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 170, characters 12-15:
+File "codegen.ml", line 182, characters 12-15:
 Warning 40: Neq was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 170, characters 12-15:
+File "codegen.ml", line 182, characters 12-15:
 Warning 42: this use of Neq relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 4-8:
+File "codegen.ml", line 183, characters 4-8:
 Warning 40: Less was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 4-8:
+File "codegen.ml", line 183, characters 4-8:
 Warning 42: this use of Less relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 11-14:
+File "codegen.ml", line 183, characters 11-14:
 Warning 40: Leq was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 11-14:
+File "codegen.ml", line 183, characters 11-14:
 Warning 42: this use of Leq relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 17-24:
+File "codegen.ml", line 183, characters 17-24:
 Warning 40: Greater was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 17-24:
+File "codegen.ml", line 183, characters 17-24:
 Warning 42: this use of Greater relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 171, characters 27-30:
+File "codegen.ml", line 183, characters 27-30:
 Warning 40: Geq was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 171, characters 27-30:
+File "codegen.ml", line 183, characters 27-30:
 Warning 42: this use of Geq relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 172, characters 4-7:
+File "codegen.ml", line 184, characters 4-7:
 Warning 40: And was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 172, characters 4-7:
+File "codegen.ml", line 184, characters 4-7:
 Warning 42: this use of And relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 172, characters 10-12:
+File "codegen.ml", line 184, characters 10-12:
 Warning 40: Or was selected from type A.op.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 172, characters 10-12:
+File "codegen.ml", line 184, characters 10-12:
 Warning 42: this use of Or relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 177, characters 5-8:
+File "codegen.ml", line 189, characters 5-8:
 Warning 40: Neg was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 177, characters 5-8:
+File "codegen.ml", line 189, characters 5-8:
 Warning 42: this use of Neg relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 178, characters 5-8:
+File "codegen.ml", line 190, characters 5-8:
 Warning 40: Not was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 178, characters 5-8:
+File "codegen.ml", line 190, characters 5-8:
 Warning 42: this use of Not relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 179, characters 5-8:
+File "codegen.ml", line 191, characters 5-8:
 Warning 40: Neg was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 179, characters 5-8:
+File "codegen.ml", line 191, characters 5-8:
 Warning 42: this use of Neg relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 180, characters 5-8:
+File "codegen.ml", line 192, characters 5-8:
 Warning 40: Neg was selected from type A.uop.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 180, characters 5-8:
+File "codegen.ml", line 192, characters 5-8:
 Warning 42: this use of Neg relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 181, characters 10-17:
+File "codegen.ml", line 193, characters 10-17:
 Warning 40: Illegal was selected from type A.typ.
 It is not visible in the current scope, and will not 
 be selected if the type becomes unknown.
-File "codegen.ml", line 181, characters 10-17:
+File "codegen.ml", line 193, characters 10-17:
 Warning 42: this use of Illegal relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 158, characters 23-1221:
+File "codegen.ml", line 170, characters 23-1221:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Cxassign (_, _, _)|ComplexReference _)
-File "codegen.ml", line 242, characters 8-16:
+File "codegen.ml", line 254, characters 8-16:
 Warning 42: this use of Assign relies on type-directed disambiguation,
 it will not compile with OCaml 4.00 or earlier.
-File "codegen.ml", line 249, characters 58-522:
+File "codegen.ml", line 261, characters 58-522:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Bool|Void|Illegal)
-File "codegen.ml", line 189, characters 23-3563:
+File "codegen.ml", line 201, characters 23-3965:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 ComplexReference _
-File "codegen.ml", line 279, characters 27-1560:
+File "codegen.ml", line 295, characters 27-1560:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Assign (_, _)
 File "codegen.ml", line 31, characters 6-13:
 Warning 26: unused variable f32x4_t.
-File "codegen.ml", line 145, characters 6-28:
+File "codegen.ml", line 157, characters 6-28:
 Warning 26: unused variable build_complex_argument.
-File "codegen.ml", line 153, characters 8-26:
+File "codegen.ml", line 165, characters 8-26:
 Warning 26: unused variable build_complex_real.
-File "codegen.ml", line 184, characters 12-17:
+File "codegen.ml", line 196, characters 12-17:
 Warning 27: unused variable fname.
-File "codegen.ml", line 184, characters 19-26:
+File "codegen.ml", line 196, characters 19-26:
 Warning 27: unused variable actuals.
-File "codegen.ml", line 184, characters 5-35:
+File "codegen.ml", line 196, characters 5-35:
 Warning 26: unused variable call.
-File "codegen.ml", line 185, characters 21-22:
+File "codegen.ml", line 197, characters 21-22:
 Warning 27: unused variable s.
-File "codegen.ml", line 185, characters 24-25:
+File "codegen.ml", line 197, characters 24-25:
 Warning 27: unused variable c.
 # Target: compa.cmx, tags: { package(llvm), package(llvm.analysis), compile, extension:cmx, extension:ml, file:compa.cmx, file:compa.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmx compa.ml
+ocamlfind ocamlopt -c -w +a-4 -package llvm.analysis -package llvm -o compa.cmx compa.ml # cached
 # Target: compa.native, tags: { package(llvm), package(llvm.analysis), dont_link_with, extension:native, file:compa.native, link, native, ocaml, program, quiet }
 ocamlfind ocamlopt -linkpkg -package llvm.analysis -package llvm ast.cmx semant.cmx codegen.cmx parser.cmx scanner.cmx compa.cmx -o compa.native
 # Compilation successful.

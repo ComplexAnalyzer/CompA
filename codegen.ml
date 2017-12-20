@@ -71,10 +71,22 @@ let ltype_of_typ = function
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
 
-
-
   let sqrtps = L.declare_function "llvm.x86.sse.sqrt.ps"
      (L.function_type float_t [|float_t|]) the_module in
+
+  let sinps = L.declare_function "llvm.sin.*"
+     (L.function_type float_t [|float_t|]) the_module in
+
+  let cosps = L.declare_function "llvm.cos.*"
+     (L.function_type float_t [|float_t|]) the_module in
+
+  let powips = L.declare_function "llvm.powi.*"
+     (L.function_type float_t [|float_t; i32_t |]) the_module in
+
+  let powps = L.declare_function "llvm.pow.*"
+     (L.function_type float_t [|float_t; float_t |]) the_module in
+
+
 
 
   
@@ -258,6 +270,10 @@ let ltype_of_typ = function
       "printf" builder
       )
       |A.Call ("sqrt", [e1])  -> L.build_call sqrtps [| (expr builder e1)|] "sqrt" builder 
+      |A.Call ("sin", [e1])  -> L.build_call sinps [| (expr builder e1)|] "sin" builder
+      |A.Call ("cos", [e1])  -> L.build_call cosps [| (expr builder e1)|] "cos" builder
+      |A.Call ("powi", [e1;e2])  -> L.build_call powips [| (expr builder e1);(expr builder e2)|] "powi" builder
+      |A.Call ("pow", [e1;e2])  -> L.build_call powps [| (expr builder e1);(expr builder e2)|] "pow" builder     
     
       | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
