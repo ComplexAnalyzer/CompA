@@ -1,17 +1,22 @@
 int main()
 {   string a;
     cx c;
+    cx d;
     int b;
-    float d;
+    float e;
+   
 
 
     b=3;
-    c= (2.2,5.3);
+    c= (2.3,5.3);
+    d= (2.3,3.2);
     a ="hello world";
-    d = c[0];
-    c[1]=4.5;
+   
+    c[1]=c[1]+c[0];
+    e = sqrt(2.2);
     
-    print(d);
+    print(e);
     print(c);
+
     return 0;
 }

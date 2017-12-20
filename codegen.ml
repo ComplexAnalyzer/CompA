@@ -27,7 +27,9 @@ let translate (globals, functions) =
   and i1_t   = L.i1_type   context
   and str_t  = L.pointer_type (L.i8_type context)
   and void_t = L.void_type context
-  and float_t= L.double_type context in
+  and f32_t   = L.float_type context in
+  let f32x4_t = L.vector_type f32_t 4 
+  and float_t = L.double_type context in
   let cx_t = L.array_type float_t 2 in
   (*let cx_pointer_t = L.pointer_type float_t in*)
   (*let cx_fst = L.extractvalue cx_t 1 in*)
@@ -69,6 +71,14 @@ let ltype_of_typ = function
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
 
+
+
+  let sqrtps = L.declare_function "llvm.x86.sse.sqrt.ps"
+     (L.function_type float_t [|float_t|]) the_module in
+
+
+  
+
   (*let printcx_t = L.var_arg_function_type i32_t [| cx_fst;cx_snd |] in
   let printcx_func = L.declare_function "printcx" printf_t the_module in*)
   
@@ -79,10 +89,7 @@ let ltype_of_typ = function
   let _ = build_ret (const_int i32_t 0) builder in
   *)
 
-  (* Declare the built-in printbig() function *)
-  let printbig_t = L.function_type i32_t [| i32_t |] in
-  let printbig_func = L.declare_function "printbig" printbig_t the_module in
-
+  
   (* Define each function (arguments and return type) so we can call it *)
   let function_decls =
     let function_decl m fdecl =
@@ -102,6 +109,7 @@ let ltype_of_typ = function
     let float_format_str = L.build_global_stringptr "%f\n" "fmt" builder in
     let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
     let cx_format_str = L.build_global_stringptr "(%f,%f)\n" "fmt" builder in
+    
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -231,9 +239,7 @@ let ltype_of_typ = function
 	  (match op with
 	    A.Neg     -> L.build_neg
       | A.Not     -> L.build_not) e' "tmp" builder
-      | A.Assign (s, e) -> let e' = expr builder e in
-                     (*if check_type e= A.Complex then StringMap.add s (cx_value e) cx_var  
-                     else StringMap.add s (0.0,0.0) cx_var in *)                 
+      | A.Assign (s, e) -> let e' = expr builder e in             
 	                   ignore (L.build_store e' (lookup s) builder); e'
 
       | A.Cxassign (s,e1,e2) ->  let e1' = expr builder e1
@@ -251,9 +257,7 @@ let ltype_of_typ = function
        L.build_call printf_func [| cx_format_str ; (expr builder e)|]
       "printf" builder
       )
-      |A.Call ("printcx", [e1;e2])  ->
-    L.build_call printf_func [| cx_format_str ; (expr builder e1);(expr builder e2)|]
-      "printcx" builder
+      |A.Call ("sqrt", [e1])  -> L.build_call sqrtps [| (expr builder e1)|] "sqrt" builder 
     
       | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
