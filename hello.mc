@@ -68,6 +68,9 @@ int main()
     print(a1);
     i2 = vblovesCOR( 2, 4);
     print(i2);
+
+    c3 = euler((2.3,2.4));
+    print(c3); 
        
     return 0;
 }
@@ -91,6 +94,24 @@ int vblovesCOR( int a, int b){
     result = a + b;
     return result;
 } 
+
+
+cx euler(cx c){
+    float a1;
+    float a2;
+    float a3;
+    int i;
+    cx result;
+
+    result = (0.0,0.0);
+    a1 = sin(c[1]);
+    a2 = cos(c[1]);
+    a3 = pow(exp(1.0), c[0]);
+
+    result[0]= a3*a1;
+    result[1]= a3*a2;
+    return result;
+}
 
 
 
