@@ -95,6 +95,8 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | ID LSQRBR expr RSQRBR { ComplexAccess($1, $3) }
+  | ID LSQRBR expr RSQRBR ASSIGN expr { Cxassign($1, $3, $6) }
   | LPAREN expr COMMA expr RPAREN { Cx($2,$4) }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }

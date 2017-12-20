@@ -119,6 +119,9 @@ let ltype_of_typ = function
           (Array.to_list (L.params the_function)) in
       List.fold_left add_local formals fdecl.A.locals in
 
+
+
+
     (* Return the value for a variable or formal argument *)
     let lookup n = try StringMap.find n local_vars
                    with Not_found -> StringMap.find n global_vars in
@@ -130,6 +133,20 @@ let ltype_of_typ = function
         let symbols = check_func in StringMap.find s symbols in
 
 
+
+  let build_complex_argument s builder =
+            L.build_in_bounds_gep (lookup s) [| L.const_int i32_t 0; L.const_int i32_t 0|] s builder
+    in
+
+    let build_complex_access s i1 i2 builder  =
+            L.build_load (L.build_gep (lookup s) [| i1; i2|] s builder) s builder
+    in 
+
+    let build_complex_real s builder  =
+            L.build_load (L.build_gep (lookup s) [| L.const_int i32_t 0;L.const_int i32_t 0 |] s builder) s builder
+    in
+
+  
   let rec check_type = function
    A.IntLit _ -> A.Int
   |A.FloatLit _-> A.Float
@@ -157,10 +174,7 @@ let ltype_of_typ = function
    | A.Noexpr -> A.Void
    | A.Assign(_, e)  -> check_type e                            
    | A.Call(fname, actuals) as call -> A.Illegal 
-   
-    
-
-    (*check type of a expression*)
+   | A.ComplexAccess(s, c) -> A.Float
 
 
     (* Construct code for an expression; return its value *)
@@ -176,6 +190,10 @@ let ltype_of_typ = function
       | A.Cx(e1,e2) -> 
       let e1' = expr builder e1
       and e2' = expr builder e2 in L.const_array float_t [|e1';e2'|] 
+      | A.ComplexAccess (s, e) -> let i1 = expr builder e in (match (type_of_identifier s) with
+                                            A.Complex -> (build_complex_access s (L.const_int i32_t 0) i1 builder)
+                                            | _ -> build_complex_access s (L.const_int i32_t 0) i1 builder)
+
       | A.Binop (e1, op, e2) ->
        let e1' = expr builder e1
        and e2' = expr builder e2 
@@ -214,7 +232,14 @@ let ltype_of_typ = function
 	    A.Neg     -> L.build_neg
       | A.Not     -> L.build_not) e' "tmp" builder
       | A.Assign (s, e) -> let e' = expr builder e in
+                     (*if check_type e= A.Complex then StringMap.add s (cx_value e) cx_var  
+                     else StringMap.add s (0.0,0.0) cx_var in *)                 
 	                   ignore (L.build_store e' (lookup s) builder); e'
+
+      | A.Cxassign (s,e1,e2) ->  let e1' = expr builder e1
+                                 and e2' = expr builder e2 in                       
+                                 let comp = L.build_gep (lookup s) [| L.const_int i32_t 0 ; e1'|] s builder in 
+                                 ignore (L.build_store e2' comp builder); e2'
       | A.Call ("print", [e]) | A.Call ("printb", [e]) -> (match check_type e with 
       A.Float -> L.build_call printf_func [| float_format_str ; (expr builder e) |]
 	    "printf" builder

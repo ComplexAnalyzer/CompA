@@ -20,6 +20,9 @@ type expr =
   | Assign of string * expr
   | Call of string * expr list
   | Cx of expr * expr
+  | ComplexAccess of string * expr
+  | Cxassign of string * expr * expr
+  | ComplexReference of string
   | Noexpr
 
 type stmt =
