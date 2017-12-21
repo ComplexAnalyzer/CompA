@@ -1,4 +1,4 @@
-(*Semantic checking for the MicroC compiler *)
+(*Semantic checking for the CompA compiler *)
 
 open Ast
 module StringMap = Map.Make(String)
@@ -30,7 +30,11 @@ let check (globals, functions) =
   let check_assign lvaluet rvaluet err =
      if lvaluet == rvaluet then lvaluet else raise err
   in
-   
+  
+  let check_cxassign lvaluec index rvaluec err =
+     if lvaluec == Complex && index== Int && rvaluec == Float then lvaluec else raise err
+  in
+
   (**** Checking Global Variables ****)
 
   List.iter (check_not_void (fun n -> "illegal void global " ^ n)) globals;
@@ -47,12 +51,34 @@ let check (globals, functions) =
 
   (* Function declaration for a named function *)
   let built_in_decls =  StringMap.add "print"
-     { typ = Void; fname = "print"; formals = [(Int, "x")];
-       locals = []; body = [] } (StringMap.add "printb"
-     { typ = Void; fname = "printb"; formals = [(Bool, "x")];
-       locals = []; body = [] } (StringMap.singleton "printbig"
+     { typ = Void; fname = "print"; formals = [( Float, "x")];
+       locals = []; body = [] } (StringMap.add "sqrt"
+     { typ = Float; fname = "sqrt"; formals = [(Float,"x")];
+       locals = [];body =  []   } (StringMap.add "sin"
+     { typ = Float; fname = "sin"; formals = [(Float,"x")];
+       locals = [];body =  []   } (StringMap.add "cos"
+     { typ = Float; fname = "cos"; formals = [(Float,"x")];
+       locals = [];body =  []   } (StringMap.add "powi"
+     { typ = Float; fname = "powi"; formals = [(Float,"x");(Int,"y")];
+       locals = [];body =  []   } (StringMap.add "pow"
+     { typ = Float; fname = "pow"; formals = [(Float,"x");(Float,"y")];
+       locals = [];body =  []   } (StringMap.add "exp"
+     { typ = Float; fname = "exp"; formals = [(Float,"x")];
+       locals = [];body =  []   } (StringMap.add "log"
+     { typ = Float; fname = "log"; formals = [(Float,"x")];
+       locals = [];body =  []   } (StringMap.add "log10"
+     { typ = Float; fname = "log10"; formals = [(Float,"x")];
+       locals = [];body =  []   } (StringMap.add "fabs"
+     { typ = Float; fname = "fabs"; formals = [(Float,"x")];
+       locals = []; body =  []   } (StringMap.add "min"
+     { typ = Float; fname = "min"; formals = [(Float,"x");(Float,"y")];
+       locals = [];body =  []   } (StringMap.add "max"
+     { typ = Float; fname = "max"; formals = [(Float,"x");(Float,"y")];
+       locals = []; body =  []   } (StringMap.add "rnd"
+     { typ = Float; fname = "rnd"; formals = [(Float,"x")];
+       locals = []; body =  []   }(StringMap.singleton "printbig"
      { typ = Void; fname = "printbig"; formals = [(Int, "x")];
-       locals = []; body = [] }))
+       locals = []; body = [] })))))))))))))
   in
      
      
@@ -141,12 +167,26 @@ let check (globals, functions) =
 
     (* Return the type of an expression or throw an exception *)
     let rec expr = function
-	IntLit _ -> Int
-  |FloatLit _-> Float
-  |StrLit _-> String
-  | BoolLit _ -> Bool
-  | Id s -> type_of_identifier s
-  | PointerIncrement(s) -> check_pointer_type (type_of_identifier s)(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+        IntLit _ -> Int
+      | FloatLit _-> Float
+      | StrLit _-> String
+      | BoolLit _ -> Bool
+      | Id s -> type_of_identifier s
+      | ComplexAccess (s, e) -> let _ = (match (expr e) with
+                                          Int -> Int
+                                        | _ -> raise (Failure ("Complex index should be integer"))) in
+                                         (type_of_identifier s)
+      | Cx(e1,e2) -> let t1 =  expr e1 and t2 = expr e2 in 
+                      ( match t1 with 
+                        Float -> (match t2 with 
+                                  Float -> Complex
+                                | _ -> raise (Failure ("illegal element type of Complex number " ^
+                                       string_of_typ t2 ^" in " ^ string_of_expr e2)))
+                        |_ -> raise (Failure ("illegal element type of Complex number " ^
+                              string_of_typ t1 ^" in " ^ string_of_expr e1))
+                      )
+
+      | PointerIncrement(s) -> check_pointer_type (type_of_identifier s)(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
       | MatrixLiteral s -> check_all_matrix_literal s (matrix_type s) 0
       | Matrix1DAccess(s, e1) -> let _ = (match (expr e1) with
                                           Int -> Int
@@ -171,7 +211,7 @@ let check (globals, functions) =
       | Dereference(s) -> pointer_type (type_of_identifier s)
       | Matrix1DReference(s) -> check_matrix1D_pointer_type( type_of_identifier s )
       | Matrix2DReference(s) -> check_matrix2D_pointer_type( type_of_identifier s )
-  | Cx(e1,e2) -> let t1 =  expr e1 and t2 = expr e2 in ( match t1 with Float when t2= Float -> Complex)
+
   | Binop(e1, op, e2) as e -> let t1 = expr e1 and t2 = expr e2 in
 	(match op with
           Add | Sub | Mult | Div when t1 = Int && t2 = Int -> Int
@@ -179,6 +219,7 @@ let check (globals, functions) =
   | Add | Sub | Mult | Div when t1 = Float && t2 = Float -> Float
 	| Equal | Neq when t1 = t2 -> Bool
 	| Less | Leq | Greater | Geq when t1 = Int && t2 = Int -> Bool
+  | Less | Leq | Greater | Geq when t1 = Float && t2 = Float -> Bool
 	| And | Or when t1 = Bool && t2 = Bool -> Bool
         | _ -> raise (Failure ("illegal binary operator " ^
               string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
@@ -218,6 +259,14 @@ let check (globals, functions) =
         check_assign lt rt (Failure ("illegal assignment " ^ string_of_typ lt ^
 				     " = " ^ string_of_typ rt ^ " in " ^ 
 				     string_of_expr ex))
+
+      | Cxassign(var,e1,e2) as ex -> let lt = type_of_identifier var
+                                  and index = expr e1 
+                                  and num = expr e2 in
+        check_cxassign lt index num (Failure ("illegal assignment of complex" ^ string_of_typ lt ^
+             " = " ^ string_of_typ num ^ " in " ^
+             string_of_expr ex  ^ "with" ^ string_of_typ index ))
+
       | Call(fname, actuals) as call -> let fd = function_decl fname in
          if List.length actuals != List.length fd.formals then
            raise (Failure ("expecting " ^ string_of_int
