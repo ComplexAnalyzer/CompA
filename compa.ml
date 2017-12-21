@@ -20,7 +20,7 @@ let _ =
           with End_of_file -> close_in ic; String.concat "\n" !array_string 
 
   in 
-  let in_file = open_in "stdlib.mc" in 
+  let in_file = open_in "stdlib.ca" in 
   let string_in = file_to_string in_file in
   let other_file = file_to_string stdin in
   let str = String.concat "\n" [other_file; string_in] in
