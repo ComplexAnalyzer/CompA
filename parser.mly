@@ -11,7 +11,7 @@ open Ast
 %token <float> FLOATLIT
 %token <string> ID STRLIT
 %token EOF
-%token LEN HEIGHT WIDTH PERCENT OCTOTHORP
+%token LEN ROW COL PERCENT OCTOTHORP
 
 %nonassoc NOELSE
 %nonassoc ELSE
@@ -140,8 +140,8 @@ expr:
   | OCTOTHORP ID                                  { Dereference($2)}
   | PLUS PLUS ID                                  { PointerIncrement($3) }
   | LEN LPAREN ID RPAREN                          { Len($3) }
-  | HEIGHT LPAREN ID RPAREN                       { Height($3) }
-  | WIDTH LPAREN ID RPAREN                        { Width($3) }
+  | ROW LPAREN ID RPAREN                          { Row($3) }
+  | COL LPAREN ID RPAREN                          { Col($3) }
 
 primitives:
     INTLIT           { IntLit($1) }

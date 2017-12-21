@@ -202,12 +202,12 @@ let check (globals, functions) =
       | Len(s) -> (match (type_of_identifier s) with
                     Matrix1DType(_, _) -> Int
                   | _ -> raise(Failure ("cannot get the length of non-1d-matrix")))
-      | Height(s) -> (match (type_of_identifier s) with
+      | Row(s) -> (match (type_of_identifier s) with
                     Matrix2DType(_, _, _) -> Int
-                  | _ -> raise(Failure ("cannot get the height of non-2d-matrix")))
-      | Width(s) -> (match (type_of_identifier s) with
+                  | _ -> raise(Failure ("cannot get the row of non-2d-matrix")))
+      | Col(s) -> (match (type_of_identifier s) with
                     Matrix2DType(_, _, _) -> Int
-                  | _ -> raise(Failure ("cannot get the width of non-2d-matrix")))
+                  | _ -> raise(Failure ("cannot get the column of non-2d-matrix")))
       | Dereference(s) -> pointer_type (type_of_identifier s)
       | Matrix1DReference(s) -> check_matrix1D_pointer_type( type_of_identifier s )
       | Matrix2DReference(s) -> check_matrix2D_pointer_type( type_of_identifier s )

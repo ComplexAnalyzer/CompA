@@ -48,8 +48,8 @@ rule token = parse
 
 (* Matrices *)
 | "len"	   { LEN }		
-| "height" { HEIGHT } 
-| "width"  { WIDTH }
+| "row"    { ROW } 
+| "col"    { COL }
 
 (* Control Flow *)
 | "if"     { IF }

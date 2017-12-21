@@ -35,8 +35,8 @@ type expr =
   | Matrix2DReference of string
   | Dereference of string
   | Len of string
-  | Height of string
-  | Width of string
+  | Row of string
+  | Col of string
 
 type stmt =
     Block of stmt list
@@ -123,8 +123,8 @@ let rec string_of_expr = function
   | Matrix2DReference(s) -> "%%" ^ s
   | Dereference(s) -> "#" ^ s
   | Len(s) -> "len(" ^ s ^ ")"
-  | Height(s) -> "height(" ^ s ^ ")"
-  | Width(s) -> "width(" ^ s ^ ")"
+  | Row(s) -> "row(" ^ s ^ ")"
+  | Col(s) -> "col(" ^ s ^ ")"
 
 let rec string_of_stmt = function
     Block(stmts) ->

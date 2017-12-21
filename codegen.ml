@@ -319,8 +319,8 @@ let ltype_of_typ = function
    | Matrix1DAccess(s, e1) -> A.Float
    | Matrix2DAccess(s, e1, e2) -> A.Float
    | Len(s) -> A.Int
-   | Height(s) -> A.Int
-   | Width(s) -> A.Int
+   | Row(s) -> A.Int
+   | Col(s) -> A.Int
    | Dereference(s) -> A.Float
    | Matrix1DReference(s) -> A.Float
    | Matrix2DReference(s) -> A.Float  
@@ -350,9 +350,9 @@ let ltype_of_typ = function
       | A.Matrix2DReference (s) -> build_2D_matrix_argument s builder
       | A.Len s -> (match (type_of_identifier s) with A.Matrix1DType(_, l) -> L.const_int i32_t l 
                                                       | _ -> L.const_int i32_t 0 )
-      | A.Height s -> (match (type_of_identifier s) with A.Matrix2DType(_, l, _) -> L.const_int i32_t l
+      | A.Row s -> (match (type_of_identifier s) with A.Matrix2DType(_, l, _) -> L.const_int i32_t l
                                                       | _ -> L.const_int i32_t 0 )
-      | A.Width s -> (match (type_of_identifier s) with A.Matrix2DType(_, _, l) -> L.const_int i32_t l
+      | A.Col s -> (match (type_of_identifier s) with A.Matrix2DType(_, _, l) -> L.const_int i32_t l
                                                       | _ -> L.const_int i32_t 0 )
       | A.Matrix1DAccess (s, e1) -> let i1 = expr builder e1 in (match (type_of_identifier s) with 
                                                       A.Matrix1DType(_, l) -> (
