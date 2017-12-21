@@ -111,7 +111,7 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
-  | PI               { FloatLit(3.141592653589793238)}
+  | PI               { FloatLit(3.1415926535897932384626433832795)}
   | ID LSQRBR expr RSQRBR { ComplexAccess($1, $3) }
   | ID LSQRBR expr RSQRBR ASSIGN expr { Cxassign($1, $3, $6) }
   | LPAREN expr COMMA expr RPAREN { Cx($2,$4) }
