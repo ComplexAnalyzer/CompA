@@ -1,29 +1,37 @@
 (* Top-level of the CompA compiler: scan & parse the input,
    check the resulting AST, generate LLVM IR, and dump the module *)
-
-module StringMap = Map.Make(String)
-
 type action = Ast | LLVM_IR | Compile
 
 let _ =
-  let action = ref Compile in
-  let set_action a () = action := a in
-  let speclist = [
-    ("-a", Arg.Unit (set_action Ast), "Print the SAST");
-    ("-l", Arg.Unit (set_action LLVM_IR), "Print the generated LLVM IR");
-    ("-c", Arg.Unit (set_action Compile),
-      "Check and print the generated LLVM IR (default)");
-  ] in  
-  let usage_msg = "usage: ./compa.native [-a|-l|-c] [file.mc]" in
-  let channel = ref stdin in
-  Arg.parse speclist (fun filename -> channel := open_in filename) usage_msg;
-  let lexbuf = Lexing.from_string (Preprocess.process_files Sys.argv.(2) Sys.argv.(3) ) in
-  (*let lexbuf = Lexing.from_channel !channel in*)
-  let ast = Parser.program Scanner.token lexbuf in
-  (*Semant.check ast;*) 
-  match !action with
-    Ast -> print_string (Ast.string_of_program ast)
-  | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate ast))
-  | Compile -> let m = Codegen.translate ast in
+  let action = if Array.length Sys.argv > 1 then
+    List.assoc Sys.argv.(1) [ ("-a", Ast);      (* Print the AST only *)
+                              ("-l", LLVM_IR);  (* Generate LLVM, don't check *)
+                              ("-c", Compile) ] (* Generate, check LLVM IR *)
+  else Compile in
+  
+  let file_to_string file = 
+    let array_string = ref [] in
+      let ic = file in
+          try
+             while true do 
+                 array_string := List.append !array_string [input_line ic]
+              done;
+              String.concat "\n" !array_string
+          with End_of_file -> close_in ic; String.concat "\n" !array_string 
+
+  in 
+  let in_file = open_in "stdlib.mc" in 
+  let string_in = file_to_string in_file in
+  let other_file = file_to_string stdin in
+  let str = String.concat "\n" [other_file; string_in] in
+
+  
+  let lexbuf = Lexing.from_string str  in
+  let ast = Parser.program Scanner.token lexbuf  in
+  (*Semant.check ast ;*)
+  match action with
+    Ast -> print_string (Ast.string_of_program ast)  
+   | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate ast))
+   | Compile -> let m = Codegen.translate ast in
     Llvm_analysis.assert_valid_module m;
     print_string (Llvm.string_of_llmodule m)

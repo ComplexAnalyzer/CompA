@@ -5,7 +5,11 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String | Float | Complex | Illegal
+type typ = Int | Bool | Void | String | Float | Complex | Illegal(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+    | Matrix1DType of typ * int
+    | Matrix2DType of typ * int * int
+    | Matrix1DPointer of typ
+    | Matrix2DPointer of typ
 
 type bind = typ * string
 
@@ -17,16 +21,27 @@ type expr =
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
-  | Assign of string * expr
+  | Assign of expr * expr
   | Call of string * expr list
   | Cx of expr * expr
+  | ComplexAccess of string * expr
+  | Cxassign of string * expr * expr
   | Noexpr
+  | PointerIncrement of string(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+    | MatrixLiteral of expr list
+    | Matrix1DAccess of string * expr 
+    | Matrix2DAccess of string * expr * expr
+    | Matrix1DReference of string
+    | Matrix2DReference of string
+    | Dereference of string
+    | Len of string
+    | Height of string
+    | Width of string
 
 type stmt =
     Block of stmt list
   | Expr of expr
   | Return of expr
-  | Assign of string * expr
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
   | While of expr * stmt
@@ -62,6 +77,26 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "!"
 
+
+let string_of_matrix m =(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+  let rec string_of_matrix_lit = function
+      [] -> "]"
+    | [hd] -> (match hd with
+                IntLit(i) -> string_of_int i
+              | FloatLit(i) -> string_of_float i
+              | BoolLit(i) -> string_of_bool i
+              | Id(s) -> s
+              | _ -> raise( Failure("Illegal expression in matrix literal") )) ^ string_of_matrix_lit []
+    | hd::tl -> (match hd with
+                    IntLit(i) -> string_of_int i ^ ", "
+                  | FloatLit(i) -> string_of_float i ^ ", "
+                  | BoolLit(i) -> string_of_bool i ^ ", "
+                  | Id(s) -> s
+                  | _ -> raise( Failure("Illegal expression in matrix literal") )) ^ string_of_matrix_lit tl
+  in
+  "[" ^ string_of_matrix_lit m
+
+
 let rec string_of_expr = function
     IntLit(l) -> string_of_int l
   | FloatLit(f) -> string_of_float f
@@ -69,13 +104,25 @@ let rec string_of_expr = function
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
-  | Cx(e1,e2) -> "(" ^ string_of_expr e1 ^","^string_of_expr e2^")"
+  | Cx(e1,e2) -> "(" ^ string_of_expr e1 ^ "," ^ string_of_expr e2 ^ ")"
   | Binop(e1, o, e2) -> string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
-  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
+  | Assign(r1, r2) -> (string_of_expr r1) ^ " =  " ^ (string_of_expr r2) 
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
+   | ComplexAccess(s, e1) -> s ^ " = " ^"[" ^ string_of_expr e1 ^"]" 
+   | Cxassign(v,e1,e2) -> v ^ "[" ^ string_of_expr e1 ^"] = " ^ string_of_expr e2
+  | PointerIncrement(s) -> "++" ^ s (*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+  | MatrixLiteral(m) -> string_of_matrix m
+    | Matrix1DAccess(s, r1) -> s ^ "[" ^ (string_of_expr r1) ^ "]"
+    | Matrix2DAccess(s, r1, r2) -> s ^ "[" ^ (string_of_expr r1) ^ "]" ^ "[" ^ (string_of_expr r2) ^ "]"
+    | Matrix1DReference(s) -> "%" ^ s
+    | Matrix2DReference(s) -> "%%" ^ s
+    | Dereference(s) -> "#" ^ s
+    | Len(s) -> "len(" ^ s ^ ")"
+    | Height(s) -> "height(" ^ s ^ ")"
+    | Width(s) -> "width(" ^ s ^ ")"
 
 let rec string_of_stmt = function
     Block(stmts) ->
@@ -89,16 +136,17 @@ let rec string_of_stmt = function
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s 
 
-let string_of_typ = function
+let rec string_of_typ = function
     Int -> "int"
   | Float -> "float"
   | Bool -> "bool"
   | Void -> "void"
   | String -> "string"
   | Complex -> "cx"
-  
-  
->>>>>>> a4e92c6355a7d5018c8e331238b204a3bd4ba2dd
+  | Matrix1DType(t, i1) -> string_of_typ t ^ "[" ^ string_of_int i1 ^ "]"
+  | Matrix2DType(t, i1, i2) -> string_of_typ t ^ "[" ^ string_of_int i1 ^ "]" ^ "[" ^ string_of_int i2 ^ "]"
+  | Matrix1DPointer(t) -> string_of_typ t ^ "[]"
+  | Matrix2DPointer(t) -> string_of_typ t ^ "[][]"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

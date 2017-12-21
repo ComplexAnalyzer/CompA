@@ -42,6 +42,12 @@ rule token = parse
 | "||"     { OR }
 | "!"      { NOT }
 
+(* Reference Dereference *)(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+| '%' { PERCENT } | '#' { OCTOTHORP }
+
+(* Matrices *)(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+|  "len"	{ LEN }		|  	"height" { HEIGHT } |	"width" { WIDTH }
+
 (* Control Flow *)
 | "if"     { IF }
 | "else"   { ELSE }
@@ -61,6 +67,7 @@ rule token = parse
 | "void"   { VOID }
 | "true"   { TRUE }
 | "false"  { FALSE }
+| "PI"     { PI }
 | string_literal { STRLIT(s) }
 | float as lxm { FLOATLIT(float_of_string lxm) }
 | digit+ as lxm { INTLIT(int_of_string lxm) }

@@ -1,0 +1,58 @@
+int main()
+{
+    int[2][3] m1;
+    int[2][3] m2;
+
+    populate_2D_int(%%m1, 1, 2, 3);
+    populate_2D_int(%%m2, 2, 2, 3);
+
+    add_2D_scalar(%%m1, 5, 2, 3);
+    add_2D_int(%%m1, %%m2, 2, 3);
+    
+    print_2D_int(%%m1, 2, 3);
+}
+
+void populate_2D_int(int[][] x, int a, int h, int w) {
+    int i;
+    for (i=0;i<(h*w);i=i+1) {
+        #x = a;
+        x = ++x;
+    }
+}
+
+void print_2D_int(int[][] x, int h, int w) {
+    int i;
+    int j;
+
+    for (i=0; i<h; i=i+1) {
+        print("[  ");
+        for (j=0; j<w; j=j+1) {
+            print(#x);  
+            print("   ");
+            x = ++x;
+        }
+        println("]");
+    }
+}
+
+void add_2D_scalar(int[][] x, int scalar, int h, int w) {
+    
+    int i;
+
+    for (i=0; i<(h*w); i=i+1) {
+        #x = #x + scalar;
+        x = ++x;
+    }
+}
+
+
+void add_2D_int(int[][] x, int[][] y, int h, int w) {
+    
+    int i;
+
+    for (i=0; i<(h*w); i=i+1) {
+        #x = #x + #y;
+        x = ++x;
+        y = ++y;
+    }
+}
