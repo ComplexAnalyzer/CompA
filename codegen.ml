@@ -104,7 +104,7 @@ let ltype_of_typ = function
   let printf_t = L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func = L.declare_function "printf" printf_t the_module in
 
-  let sqrtps = L.declare_function "llvm.qrt.f64"
+  let sqrtps = L.declare_function "llvm.sqrt.f64"
      (L.function_type float_t [|float_t|]) the_module in
 
   let sinps = L.declare_function "llvm.sin.f64"
@@ -140,7 +140,6 @@ let ltype_of_typ = function
 
   let roundps = L.declare_function "llvm.trunc.f64"
      (L.function_type float_t [|float_t|]) the_module in
-
 
 
 
@@ -314,16 +313,16 @@ let ltype_of_typ = function
    | A.Assign(_, e)  -> check_type e                            
    | A.Call(fname, actuals) as call -> A.Illegal 
    | A.ComplexAccess(s, c) -> A.Float
-      | PointerIncrement(s) -> A.Int
-      | MatrixLiteral s -> A.Int
-      | Matrix1DAccess(s, e1) -> A.Int
-      | Matrix2DAccess(s, e1, e2) -> A.Int
+      | PointerIncrement(s) -> A.Float
+      | MatrixLiteral s -> A.Float
+      | Matrix1DAccess(s, e1) -> A.Float
+      | Matrix2DAccess(s, e1, e2) -> A.Float
       | Len(s) -> A.Int
       | Height(s) -> A.Int
       | Width(s) -> A.Int
-      | Dereference(s) -> A.Int
-      | Matrix1DReference(s) -> A.Int
-      | Matrix2DReference(s) -> A.Int    
+      | Dereference(s) -> A.Float
+      | Matrix1DReference(s) -> A.Float
+      | Matrix2DReference(s) -> A.Float  
     in
 
 
