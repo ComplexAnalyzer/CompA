@@ -42,11 +42,14 @@ rule token = parse
 | "||"     { OR }
 | "!"      { NOT }
 
-(* Reference Dereference *)(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
-| '%' { PERCENT } | '#' { OCTOTHORP }
+(* Reference Dereference *)
+| '%'      { PERCENT }
+| '#'      { OCTOTHORP }
 
-(* Matrices *)(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
-|  "len"	{ LEN }		|  	"height" { HEIGHT } |	"width" { WIDTH }
+(* Matrices *)
+| "len"	   { LEN }		
+| "height" { HEIGHT } 
+| "width"  { WIDTH }
 
 (* Control Flow *)
 | "if"     { IF }
@@ -61,10 +64,9 @@ rule token = parse
 | "string" { STRING }
 | "float"  { FLOAT }
 | "cx"     { COMPLEX }
-
+| "void"   { VOID }
 
 (* Data Values *)
-| "void"   { VOID }
 | "true"   { TRUE }
 | "false"  { FALSE }
 | "PI"     { PI }
