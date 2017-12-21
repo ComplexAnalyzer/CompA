@@ -1,0 +1,43 @@
+/* An example of users verifying that properties of complex number holds
+   Suppose an user is not sure some properties in complex numbers
+   He or she can verify these properties by writing own programs to check
+   For example: Magnitude of z and its conjugate should be the same */
+
+
+int main(){
+    cx a;
+    bool check;
+    a = (2.0,3.0);
+    
+    check = conj_check(a);
+    print("check if magnitudes of z and its conjugate are the same:");
+    if (check == true){
+        print("correct");
+    } else {
+        print("incorrect");
+    }
+}
+
+
+/* 
+    User-defined function 
+*/
+
+/* check if magnitudes of z and its conjugate are the same */
+bool conj_check(cx a){
+    float b;
+    float c;
+    cx conj_a;
+
+    conj_a = conj_complex(a);
+    b = mag_complex(a);
+    c = mag_complex(conj_a);
+    if (b == c){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+

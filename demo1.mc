@@ -1,0 +1,24 @@
+/* A simple complex number operation problem 
+   Scenario: A user wants to compute a expression
+   Given z1 = 2.0 + 3.1i, z2 = 10.3 + 23.1i, z3 = 1.2, z4 = i
+   Question: Get the euler form of (z1*z2 + z1/(z2-z4))/z3 */
+
+
+int main(){
+    cx z1;
+    cx z2;
+    cx z3;
+    cx z4;
+    cx euler_form;
+
+    z1 = (2.0, 3.1);
+    z2 = (2.3, 2.1);
+    z3 = (1.2, 2.2);
+    z4 = (0.0, 4.0);
+
+
+    euler_form = euler(div_complex( add_complex(mult_complex(z1,z2), div_complex(z1,sub_complex(z2,z4))), z3));
+    print(euler_form);
+}
+
+

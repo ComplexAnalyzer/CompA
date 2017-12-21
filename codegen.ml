@@ -108,8 +108,8 @@ let ltype_of_typ = function
   let roundps = L.declare_function "llvm.trunc.f64"
      (L.function_type float_t [|float_t|]) the_module in
  
-  (*let fsinps = L.declare_function "llvm.x87.fsin"
-     (L.function_type float_t [|float_t|]) the_module in*)
+  let fsinps = L.declare_function "llvm.x87.fsin"
+     (L.function_type float_t [|float_t|]) the_module in
 
 
 
@@ -328,7 +328,7 @@ let ltype_of_typ = function
       |A.Call ("min", [e1;e2])  -> L.build_call minps [| (expr builder e1);(expr builder e2)|] "fabs" builder 
       |A.Call ("max", [e1;e2])  -> L.build_call maxps [| (expr builder e1);(expr builder e2)|] "max" builder                                                                               
       |A.Call ("rnd", [e1])  -> L.build_call roundps [| (expr builder e1)|] "rnd" builder
-      (*|A.Call ("fsin", [e1])  -> L.build_call fsinps [| (expr builder e1)|] "fsin" builder*)
+      |A.Call ("fsin", [e1])  -> L.build_call fsinps [| (expr builder e1)|] "fsin" builder
       | A.Call (f, act) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let actuals = List.rev (List.map (expr builder) (List.rev act)) in
