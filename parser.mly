@@ -61,7 +61,7 @@ typ:
   | STRING { String }
   | BOOL { Bool }
   | VOID { Void }
-  | COMPLEX {Complex}
+  | COMPLEX { Complex }
   | matrix1D_typ { $1 }/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
   | matrix2D_typ { $1 }
   | matrix1D_pointer_typ { $1 }
