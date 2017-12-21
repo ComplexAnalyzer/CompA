@@ -103,16 +103,18 @@ let rec string_of_expr = function
   | StrLit(s) -> s
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
+  | FloatLit(3.1415926535897932384626433832795) -> string_of_float 3.1415926535897932384626433832795
   | Id(s) -> s
-  | Cx(e1,e2) -> "(" ^ string_of_expr e1 ^ "," ^ string_of_expr e2 ^ ")"
+  | Cx(e1, e2) -> "(" ^ string_of_expr e1 ^ "," ^ string_of_expr e2 ^ ")"
+  | ComplexAccess(s, e1) -> s ^ "[" ^ string_of_expr e1 ^ "]" 
+  | Cxassign(v, e1, e2) -> v ^ "[" ^ string_of_expr e1 ^ "] = " ^ string_of_expr e2
   | Binop(e1, o, e2) -> string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
-  | Assign(r1, r2) -> (string_of_expr r1) ^ " =  " ^ (string_of_expr r2) 
+  | Assign(e1, r2) -> (string_of_expr e1) ^ " = " ^ (string_of_expr e2) 
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
-   | ComplexAccess(s, e1) -> s ^ " = " ^"[" ^ string_of_expr e1 ^"]" 
-   | Cxassign(v,e1,e2) -> v ^ "[" ^ string_of_expr e1 ^"] = " ^ string_of_expr e2
+
   | PointerIncrement(s) -> "++" ^ s (*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
   | MatrixLiteral(m) -> string_of_matrix m
     | Matrix1DAccess(s, r1) -> s ^ "[" ^ (string_of_expr r1) ^ "]"
