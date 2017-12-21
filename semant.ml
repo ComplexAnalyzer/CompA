@@ -118,8 +118,8 @@ let check (globals, functions) =
 
 
 
-    let matrix_access_type = function(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
-      Matrix1DType(t, _) -> t
+    let matrix_access_type = function
+        Matrix1DType(t, _) -> t
       | Matrix2DType(t, _, _) -> t
       | _ -> raise (Failure ("illegal matrix access") )
     in
@@ -186,7 +186,7 @@ let check (globals, functions) =
                               string_of_typ t1 ^" in " ^ string_of_expr e1))
                       )
 
-      | PointerIncrement(s) -> check_pointer_type (type_of_identifier s)(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+      | PointerIncrement(s) -> check_pointer_type (type_of_identifier s)
       | MatrixLiteral s -> check_all_matrix_literal s (matrix_type s) 0
       | Matrix1DAccess(s, e1) -> let _ = (match (expr e1) with
                                           Int -> Int

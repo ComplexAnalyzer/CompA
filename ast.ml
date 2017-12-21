@@ -5,7 +5,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | String | Float | Complex | Illegal(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+type typ = Int | Bool | Void | String | Float | Complex | Illegal
     | Matrix1DType of typ * int
     | Matrix2DType of typ * int * int
     | Matrix1DPointer of typ
@@ -27,16 +27,16 @@ type expr =
   | ComplexAccess of string * expr
   | Cxassign of string * expr * expr
   | Noexpr
-  | PointerIncrement of string(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
-    | MatrixLiteral of expr list
-    | Matrix1DAccess of string * expr 
-    | Matrix2DAccess of string * expr * expr
-    | Matrix1DReference of string
-    | Matrix2DReference of string
-    | Dereference of string
-    | Len of string
-    | Height of string
-    | Width of string
+  | PointerIncrement of string
+  | MatrixLiteral of expr list
+  | Matrix1DAccess of string * expr 
+  | Matrix2DAccess of string * expr * expr
+  | Matrix1DReference of string
+  | Matrix2DReference of string
+  | Dereference of string
+  | Len of string
+  | Height of string
+  | Width of string
 
 type stmt =
     Block of stmt list
@@ -78,7 +78,7 @@ let string_of_uop = function
   | Not -> "!"
 
 
-let string_of_matrix m =(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+let string_of_matrix m =
   let rec string_of_matrix_lit = function
       [] -> "]"
     | [hd] -> (match hd with
@@ -115,16 +115,16 @@ let rec string_of_expr = function
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
 
-  | PointerIncrement(s) -> "++" ^ s (*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+  | PointerIncrement(s) -> "++" ^ s
   | MatrixLiteral(m) -> string_of_matrix m
-    | Matrix1DAccess(s, r1) -> s ^ "[" ^ (string_of_expr r1) ^ "]"
-    | Matrix2DAccess(s, r1, r2) -> s ^ "[" ^ (string_of_expr r1) ^ "]" ^ "[" ^ (string_of_expr r2) ^ "]"
-    | Matrix1DReference(s) -> "%" ^ s
-    | Matrix2DReference(s) -> "%%" ^ s
-    | Dereference(s) -> "#" ^ s
-    | Len(s) -> "len(" ^ s ^ ")"
-    | Height(s) -> "height(" ^ s ^ ")"
-    | Width(s) -> "width(" ^ s ^ ")"
+  | Matrix1DAccess(s, r1) -> s ^ "[" ^ (string_of_expr r1) ^ "]"
+  | Matrix2DAccess(s, r1, r2) -> s ^ "[" ^ (string_of_expr r1) ^ "]" ^ "[" ^ (string_of_expr r2) ^ "]"
+  | Matrix1DReference(s) -> "%" ^ s
+  | Matrix2DReference(s) -> "%%" ^ s
+  | Dereference(s) -> "#" ^ s
+  | Len(s) -> "len(" ^ s ^ ")"
+  | Height(s) -> "height(" ^ s ^ ")"
+  | Width(s) -> "width(" ^ s ^ ")"
 
 let rec string_of_stmt = function
     Block(stmts) ->

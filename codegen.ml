@@ -15,7 +15,7 @@ http://llvm.moe/ocaml/
 module L = Llvm
 module A = Ast
 module Semant = Semant 
-open Exceptions(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+open Exceptions
 
 
 module StringMap = Map.Make(String)
@@ -27,7 +27,7 @@ let translate (globals, functions) =
   and i8_t   = L.i8_type   context
   and i1_t   = L.i1_type   context
   and str_t  = L.pointer_type (L.i8_type context)
-  and pointer_t = L.pointer_type(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+  and pointer_t = L.pointer_type
   and array_t   = L.array_type
   and void_t = L.void_type context
   and f32_t   = L.float_type context in
@@ -45,7 +45,7 @@ let ltype_of_typ = function
     | A.String -> str_t
     | A.Bool -> i1_t
     | A.Void -> void_t
-    | A.Matrix1DType(typ, size) -> (match typ with(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+    | A.Matrix1DType(typ, size) -> (match typ with
                                             A.Int -> array_t i32_t size
                                           | A.Float -> array_t float_t size
                                           | A.Bool -> array_t i1_t size
@@ -214,7 +214,7 @@ let ltype_of_typ = function
 
 
 
-  let build_complex_argument s builder =(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+    let build_complex_argument s builder =
             L.build_in_bounds_gep (lookup s) [| L.const_int i32_t 0; L.const_int i32_t 0|] s builder
     in
 
@@ -313,17 +313,19 @@ let ltype_of_typ = function
    | A.Assign(_, e)  -> check_type e                            
    | A.Call(fname, actuals) as call -> A.Illegal 
    | A.ComplexAccess(s, c) -> A.Float
-      | PointerIncrement(s) -> A.Float
-      | MatrixLiteral s -> A.Float
-      | Matrix1DAccess(s, e1) -> A.Float
-      | Matrix2DAccess(s, e1, e2) -> A.Float
-      | Len(s) -> A.Int
-      | Height(s) -> A.Int
-      | Width(s) -> A.Int
-      | Dereference(s) -> A.Float
-      | Matrix1DReference(s) -> A.Float
-      | Matrix2DReference(s) -> A.Float  
-    in
+
+   | PointerIncrement(s) -> A.Float
+   | MatrixLiteral s -> A.Float
+   | Matrix1DAccess(s, e1) -> A.Float
+   | Matrix2DAccess(s, e1, e2) -> A.Float
+   | Len(s) -> A.Int
+   | Height(s) -> A.Int
+   | Width(s) -> A.Int
+   | Dereference(s) -> A.Float
+   | Matrix1DReference(s) -> A.Float
+   | Matrix2DReference(s) -> A.Float  
+  
+  in
 
 
     (* Construct code for an expression; return its value *)
@@ -343,7 +345,7 @@ let ltype_of_typ = function
                                             A.Complex -> (build_complex_access s (L.const_int i32_t 0) i1 builder)
                                             | _ -> build_complex_access s (L.const_int i32_t 0) i1 builder)
 
-      | A.MatrixLiteral s -> L.const_array (find_matrix_type s) (Array.of_list (List.map (expr builder) s))(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+      | A.MatrixLiteral s -> L.const_array (find_matrix_type s) (Array.of_list (List.map (expr builder) s))
       | A.Matrix1DReference (s) -> build_1D_matrix_argument s builder
       | A.Matrix2DReference (s) -> build_2D_matrix_argument s builder
       | A.Len s -> (match (type_of_identifier s) with A.Matrix1DType(_, l) -> L.const_int i32_t l 
@@ -405,7 +407,7 @@ let ltype_of_typ = function
       | A.Neg when t = A.Float -> L.build_fneg
       | A.Not     -> L.build_not) e' "tmp" builder
 
-      | A.Assign (e1, e2) -> let e1' = (match e1 with(*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*)
+      | A.Assign (e1, e2) -> let e1' = (match e1 with
                                             A.Id s -> lookup s
                                           | A.Matrix1DAccess (s, e1) -> let i1 = expr builder e1 in (match (type_of_identifier s) with 
                                                       A.Matrix1DType(_, l) -> (

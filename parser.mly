@@ -11,7 +11,7 @@ open Ast
 %token <float> FLOATLIT
 %token <string> ID STRLIT
 %token EOF
-%token LEN HEIGHT WIDTH PERCENT OCTOTHORP/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+%token LEN HEIGHT WIDTH PERCENT OCTOTHORP
 
 %nonassoc NOELSE
 %nonassoc ELSE
@@ -62,12 +62,12 @@ typ:
   | BOOL { Bool }
   | VOID { Void }
   | COMPLEX { Complex }
-  | matrix1D_typ { $1 }/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+  | matrix1D_typ { $1 }
   | matrix2D_typ { $1 }
   | matrix1D_pointer_typ { $1 }
   | matrix2D_pointer_typ { $1 }
 
-matrix1D_typ:/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+matrix1D_typ:
     typ LSQRBR INTLIT RSQRBR %prec NOLSQRBR  { Matrix1DType($1, $3) }
 
 matrix2D_typ:
@@ -106,7 +106,7 @@ expr_opt:
   | expr          { $1 }
 
 expr:
-    primitives       { $1 }/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+    primitives       { $1 }
   | STRLIT           { StrLit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
@@ -129,25 +129,25 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | expr ASSIGN expr   { Assign($1, $3) }/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+  | expr ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
-  | LSQRBR matrix_literal RSQRBR                  { MatrixLiteral(List.rev $2) }/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
-    | ID LSQRBR expr  RSQRBR %prec NOLSQRBR         { Matrix1DAccess($1, $3)}
-    | ID LSQRBR expr  RSQRBR LSQRBR expr  RSQRBR    { Matrix2DAccess($1, $3, $6)}
-    | PERCENT ID                                    { Matrix1DReference($2)}
-    | PERCENT PERCENT ID                            { Matrix2DReference($3)}
-    | OCTOTHORP ID                                  { Dereference($2)}
-    | PLUS PLUS ID                                  { PointerIncrement($3) }
-    | LEN LPAREN ID RPAREN                          { Len($3) }
-    | HEIGHT LPAREN ID RPAREN                       { Height($3) }
-    | WIDTH LPAREN ID RPAREN                        { Width($3) }
+  | LSQRBR matrix_literal RSQRBR                  { MatrixLiteral(List.rev $2) }
+  | ID LSQRBR expr  RSQRBR %prec NOLSQRBR         { Matrix1DAccess($1, $3)}
+  | ID LSQRBR expr  RSQRBR LSQRBR expr  RSQRBR    { Matrix2DAccess($1, $3, $6)}
+  | PERCENT ID                                    { Matrix1DReference($2)}
+  | PERCENT PERCENT ID                            { Matrix2DReference($3)}
+  | OCTOTHORP ID                                  { Dereference($2)}
+  | PLUS PLUS ID                                  { PointerIncrement($3) }
+  | LEN LPAREN ID RPAREN                          { Len($3) }
+  | HEIGHT LPAREN ID RPAREN                       { Height($3) }
+  | WIDTH LPAREN ID RPAREN                        { Width($3) }
 
-primitives:/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+primitives:
     INTLIT           { IntLit($1) }
   | FLOATLIT         { FloatLit($1) }
 
-matrix_literal:/*XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*/
+matrix_literal:
     primitives                      { [$1] }
   | matrix_literal COMMA primitives { $3 :: $1 }
 
