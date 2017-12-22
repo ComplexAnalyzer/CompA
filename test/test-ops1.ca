@@ -1,0 +1,12 @@
+int main()
+{
+  if (3==2)
+    println(1);
+  else 
+    println(0);
+
+  if (3!=2)
+    println(1);
+  else 
+    println(0);
+}

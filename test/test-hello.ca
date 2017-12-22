@@ -1,0 +1,13 @@
+int main()
+{
+  println(42);
+  println(71.3);
+  println((3.2,3.4));
+  println("hello world");
+
+  print(42);
+  print(71.3);
+  print((3.2,3.4));
+  print("hello world");
+  return 0;
+}

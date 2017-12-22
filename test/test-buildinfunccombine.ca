@@ -1,0 +1,69 @@
+int main()
+  { 
+     float a1;
+     cx s2;
+   
+     float a2;
+     float a3;
+     float a4;
+     float a5;
+
+     cx c1;
+     cx c2;
+     cx c3;
+     cx c4;
+     cx c5;
+     cx c6;
+   
+     int i1;
+     int i2;
+     int i3;
+     int i4;
+     int i5;
+
+     print("VBbigidiot");
+
+     a1= 93.2;
+     a1= sqrt(93.2);
+     println(a1);
+     
+     a2 = sin(32.2);
+     println(a2);
+     
+     a3 = cos(98.32);
+     println(a3);
+     
+     a4 = exp(2.3);
+     println(a4);
+
+     a5 = pow(a4,a3);
+     println(a5);
+     
+     a5 = powi(a4,2);
+     println(a5);
+     
+     a1 = exp(2.4);
+     println(a1);
+     
+     a1 = log(2.2);
+     println(a1);
+ 
+      a1 = log10(2.2);
+      println(a1);
+  
+      a1 = fabs(3.9);
+      println(a1);
+
+      a2 = min(2.0,3.0);
+      println(a2);
+      
+     a2 = max(2.0,3.0);
+      println(a2);
+     
+     a3 = rnd(a5);
+     println(a3);
+
+     
+     return 0;
+  }
+

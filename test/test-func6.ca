@@ -1,0 +1,10 @@
+void foo() {}
+
+float bar(float a, cx b, float c) { return a + c + b[0]; }
+
+int main()
+{ float result;
+   result = bar(12.3,(3.2,32.1), 2.5);
+  println(result);
+  return 0;
+}

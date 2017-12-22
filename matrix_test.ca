@@ -1,0 +1,104 @@
+int main(){
+	float[2][1] vector;
+	float[2][2] sheer;
+	float[2][2] reflect;
+	float[2][2] rotate;
+	float[2][2] result;
+	float[2][2] result2;
+	float[][] p;
+	int i;
+	float a;
+
+	initialize_2D_f(%%vector, 1.0, 2, 1);
+
+	print_2D_f(%%vector, row(vector), col(vector));
+	
+	sheer[0][0]= 1.0;
+	sheer[0][1]= 1.25;
+	sheer[1][0]= 0.2;
+	sheer[1][1]= 1.0;
+
+    copy_2D_f(%%sheer, 2, 2, %%reflect, 2, 2);
+    
+
+    println("test copy_2D_f");
+	print_2D_f(%%reflect, row(reflect), col(reflect));
+
+
+	rotate[0][0]= -1.0;
+	rotate[0][1]= 0.0;
+	rotate[1][0]= 0.0;
+	rotate[1][1]= 1.0;
+
+
+	
+    multiply_2D_f(%%sheer, %%vector, %%result, 2, 2, 2, 1);
+
+    println("test multiply_2D_f");
+	print_2D_f(%%result, 2, 1);
+
+
+    initialize_2D_f(%%result2, 1.0, 2, 2);
+	add_2D_f(%%result2, %%result2, 2, 2);
+
+	println("test add_2D_f");
+    print_2D_f(%%result2, 2, 2);
+    
+
+	subtract_2D_f(%%result2, %%result2, 2, 2);
+
+	println("test subtract_2D_f");
+    print_2D_f(%%result2, 2, 2);
+
+    
+    /*initialize_2D_f(%%result2, 1.0, 2, 2);*/
+    add_2D_scalar_f(%%result2, 2.0, 2, 2);
+
+    println("test add_2D_scalar_f");
+    print_2D_f(%%result2, 2, 2);
+
+
+    initialize_2D_f(%%result2, 1.0, 2, 2);
+    multiply_2D_scalar_f(%%result2, 2.0, 2, 2);
+
+    println("test multiply_2D_scalar_f");
+    print_2D_f(%%result2, 2, 2);
+
+
+
+    divide_2D_scalar_f(%%result2, 2.0, 2, 2);
+
+    println("test divide_2D_scalar_f");
+    print_2D_f(%%result2, 2, 2);
+
+
+    print_2D_f(%%sheer, 2, 2);
+    tp_f(%%sheer, %%result2, 2, 2);
+
+    println("test tp_f");
+    print_2D_f(%%result2, 2, 2);
+
+    
+    a = tr_f(%%result2, 2, 2);
+
+    println("test tr_f");
+    println(a);
+    println("");
+
+
+    a = det_f(%%result2, 2, 2);
+
+    println("test det_f");
+    println(a);
+
+    println("test inv_f");
+    print_2D_f(%%sheer, 2, 2);
+    inv_f(%%sheer, %%result2, 2, 2);
+    print_2D_f(%%result2, 2, 2);
+    
+}
+
+
+
+
+

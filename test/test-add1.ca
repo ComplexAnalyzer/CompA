@@ -1,0 +1,12 @@
+int add(int x, int y)
+{
+  return x + y;
+}
+
+int main()
+{ 
+  int a;
+  a = add(17, 25);
+  print( a );
+  return 0;
+}

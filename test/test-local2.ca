@@ -1,0 +1,16 @@
+int foo(int a, cx b)
+{
+  int c;
+  
+  cx d;
+  c = a;
+
+  return c;
+}
+
+int main() {
+ int g;
+ g = foo(37, (3.2,3.2));
+ print(g);
+ return 0;
+}

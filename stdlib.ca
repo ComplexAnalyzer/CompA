@@ -1,3 +1,10 @@
+/*CompA standard library*/
+
+
+/*******************************************
+Complex number computation
+*******************************************/
+
 /* Euler function */
 cx euler(cx c){
     float a1;
@@ -87,4 +94,458 @@ cx conj_complex(cx a){
     result[0] = a[0];
     result[1] = 0.0-temp;
     return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*******************************************
+2D Matrix initialization
+*******************************************/
+/*initialize matrix with value a, type float*/
+void initialize_2D_f(float[][] x, float a, int h, int w) {
+    int i;
+    for (i=0;i<(h*w);i=i+1) {
+        #x = a;
+        x = ++x;
+    }
+}
+
+
+/*copy matrix m1 to m2, type float*/
+void copy_2D_f(float[][]m1, int height1, int width1, float[][]m2, int height2, int width2){
+    /*check if two matrices are of the same size*/
+
+    int length;
+    int i;
+    float[][]p1;
+    float[][]p2;
+
+    length = height1 * width1;
+    p1 = m1;
+    p2 = m2;
+
+
+    /*Initialize result matrix*/
+    for (i=0;i<length;i=i+1) {
+        #p2 = 0.0;
+        p2= ++p2;
+    }
+    
+    p2 = m2;
+
+
+    for(i = 0; i<length; i=i+1){
+        #p2 = #p1;
+        p1 = ++p1;
+        p2 = ++p2;
+    }
+}
+
+
+
+
+
+
+
+
+
+/*******************************************
+2D Matrix computation
+*******************************************/
+
+
+
+/*2D matrix addition, type float*/
+void add_2D_f(float[][] x, float[][] y, int h, int w) {
+    
+    int i;
+
+    for (i=0; i<(h*w); i=i+1) {
+        #x = #x + #y;
+        x = ++x;
+        y = ++y;
+    }
+}
+
+
+
+/*2D matrix addition, type float*/
+void subtract_2D_f(float[][] x, float[][] y, int h, int w) {
+    
+    int i;
+
+    for (i=0; i<(h*w); i=i+1) {
+        #x = #x - #y;
+        x = ++x;
+        y = ++y;
+    }
+}
+
+
+/*2D matrix multiplication, type float*/
+void multiply_2D_f(float[][] m1, float[][] m2, float[][] result, int height1, int width1, int height2, int width2){
+
+    int i;
+    int j;
+    int k; 
+    int l;
+    int length;
+    float[][] p1;
+    float[][] p2;
+    float[][] presult;
+
+    length = height1 * width2;
+    presult = result;
+
+    /*Initialize result matrix*/
+    for (i=0;i<length;i=i+1) {
+        #presult = 0.0;
+        presult = ++presult;
+    }
+
+    presult = result;
+
+    for (i=0;i<height1;i=i+1) {
+        for (j=0;j<width2;j=j+1) {
+            p1 = m1;
+            p2 = m2;
+
+            for (k=0;k<(i*width1);k=k+1){
+                p1 = ++p1;
+        
+            }
+            for (l=0;l<j;l=l+1) {
+                p2 = ++p2;
+            }
+
+            for (k=0;k<width1;k=k+1) {
+                #presult = #presult + (#p1 * #p2);
+                p1 = ++p1;  
+                for (l=0;l<width2;l=l+1) {
+                    p2 = ++p2;
+                }
+            }
+            presult = ++presult;
+        }
+    }
+}
+
+
+/*2D matrix scalar addition, type float*/
+void add_2D_scalar_f(float[][] x, float a, int h, int w) {
+    
+    int i;
+
+    for (i=0; i<(h*w); i=i+1) {
+        #x = #x + a;
+        x = ++x;
+    }
+}
+
+/*2D matrix scalar addition, type float*/
+void multiply_2D_scalar_f(float[][] x, float a, int h, int w) {
+    
+    int i;
+
+    for (i=0; i<(h*w); i=i+1) {
+        #x = #x * a;
+        x = ++x;
+    }
+}
+
+
+
+/*2D matrix scalar divide, type float*/
+void divide_2D_scalar_f(float[][] x, float a, int h, int w) {
+    
+    int i;
+
+    for (i=0; i<(h*w); i=i+1) {
+        #x = #x / a;
+        x = ++x;
+    }
+}
+
+
+/*2D matrix transpose, type float*/
+void tp_f(float[][]m, float[][]result, int r, int c){
+    int i;
+    int j;
+    int k;
+    float[][]p;
+    float[][]presult;
+
+    presult = result;
+
+    
+    for(i=0;i<r; i=i+1){
+        for(j=0;j<c;j=j+1){
+            p = m;
+            for(k = 0; k<(j*c+i); k=k+1){
+                p = ++p;
+            }
+            #presult = #p;
+            presult = ++presult;
+        }
+    }
+}
+
+
+
+/*2D matrix trace, type float*/
+float tr_f(float[][]m, int r, int c){
+    
+    /*check it is a square matrix*/
+
+    int i;
+    int j;
+    float result;
+
+    result = 0.0;
+
+    for(i = 0; i<r; i = i + 1){
+        for(j = 0; j<c; j = j+1){
+            if(j == i){
+                result = result + #m;
+            }
+            m = ++m;
+        
+        }
+        
+    }
+
+    return result;
+}
+
+
+
+/*2D determinant, type float*/
+float det_f(float[][] m, int r, int c) {
+    float a11;
+    float a12;
+    float a13;
+    float a21;
+    float a22;
+    float a23;
+    float a31;
+    float a32;
+    float a33;
+    float[][] p;
+
+    float result;
+
+    p = m;
+
+    
+    if ((r == 2 && c == 2) || (r==3 && c==3))  {
+        if (c == 2){
+            a11 = #p;
+            p = ++p;
+            a12 = #p;
+            p = ++p;
+            a21 = #p;
+            p = ++p;
+            a22 = #p;
+
+            result = a11*a22-a12*a21;
+        } else {
+            a11 = #p;
+            p = ++p;
+            a12 = #p;
+            p = ++p;
+            a13 = #p;
+            p = ++p;
+            a21 = #p;
+            p = ++p;
+            a22 = #p;
+            p = ++p;
+            a23 = #p;
+            p = ++p;
+            a31 = #p;
+            p = ++p;
+            a32 = #p;
+            p = ++p;
+            a33 = #p;
+
+            result = a11 * (a22 * a33 - a23 * a32) - a12 * (a21 * a33 - a23 * a31) + a13 * (a21 * a32 - a22 * a31);
+        }
+    } else {
+        return 0.0;
+    }
+    return result;
+}
+
+
+
+/*2D matrix inverse (2*2) only, type float*/
+void inv_f(float[][] m, float[][]result, int r, int c){
+    float det;
+    float a11;
+    float a12;
+    float a21;
+    float a22;
+    float[][] presult;
+    float[][] p;
+
+
+    p = m;
+    presult = result;
+
+    if(r == 2 && c == 2){
+        det = det_f(m, r, c);
+        
+
+        a11 = #p;
+        p = ++p;
+        a12 = #p;
+        p = ++p;
+        a21 = #p;
+        p = ++p;
+        a22 = #p;
+
+        #presult = a22/det;
+        presult = ++presult;
+        #presult = -a12/det;
+        presult = ++presult;
+        #presult = -a21/det;
+        presult = ++presult;
+        #presult = a11/det;
+    }
+}  
+
+
+
+
+
+
+
+
+
+
+
+/*******************************************
+1D Matrix computation
+*******************************************/
+/*1D matrix addition, type float*/
+void add_1D_f(float[] x, float[] y, int l) {
+    
+    int i;
+
+    for (i=0; i<l; i=i+1) {
+        #x = #x + #y;
+        x = ++x;
+        y = ++y;
+    }
+}
+
+
+/*1D matrix subtraction, type float*/
+void subtract_1D_f(float[] x, float[] y, int l) {
+    
+    int i;
+
+    for (i=0; i<l; i=i+1) {
+        #x = #x - #y;
+        x = ++x;
+        y = ++y;
+    }
+}
+
+
+
+/*1D matrix inner product, type float*/
+float innerproduct_1D_f(float[] m1, float[] m2, int l){
+    int i;
+    float sum;
+    float[] p1;
+    float[] p2;
+
+    sum = 0.0;
+
+    for(i = 0; i<l; i = i+1){
+        sum = sum + (#p1 * #p2);
+        p1 = ++p1;
+        p2 = ++p2;
+    }
+
+    return sum;
+}
+
+
+
+/*1D matrix scalar multiplication, type float*/
+void multiply_1D_scalar_f(float[] x, float a, int l) {
+    
+    int i;
+
+    for (i=0; i<l; i=i+1) {
+        #x = #x * a;
+        x = ++x;
+    }
+}
+
+
+/*1D matrix scalar division, type float*/
+void divide_1D_scalar_f(float[] x, float a, int l) {
+    
+    int i;
+
+    for (i=0; i<l; i=i+1) {
+        #x = #x / a;
+        x = ++x;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/*******************************************
+Matrix print
+*******************************************/
+
+void print_2D_f(float[][] x, int h, int w) {
+    int i;
+    int j;
+
+    for (i=0; i<h; i=i+1) {
+        print("[  ");
+        for (j=0; j<w; j=j+1) {
+            print(#x);  
+            print("   ");
+            x = ++x;
+        }
+        println("]");
+
+    }
+    println("");
+}
+
+
+
+
+
+void print_1D_f(float[] x, int l) {
+    int i;
+    print("[  ");
+    for (i=0; i<l; i=i+1) {
+        print(#x);  
+        print("   ");
+        x = ++x;
+    }
+    println("]");
+    println("");
 }

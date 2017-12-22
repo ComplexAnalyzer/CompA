@@ -1,0 +1,24 @@
+int fib(int x)
+{
+  if (x < 2) return 1;
+  return fib(x-1) + fib(x-2);
+}
+
+int main()
+{  
+  int a;
+  a = fib(0);
+  print(a);
+  a = fib(1);
+  print(a);
+  a = fib(2);
+  print(a);
+  a = fib(3);
+  print(a);
+  a = fib(4);
+  print(a);
+  a = fib(5);
+  print(a);
+  
+  return 0;
+}

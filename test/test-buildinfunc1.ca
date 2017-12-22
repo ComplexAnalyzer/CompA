@@ -1,0 +1,12 @@
+
+int main()
+{ 
+
+  float a;
+  float b ;
+  b = 3.2;
+  a = exp(b);
+  println(a);
+  return 0;
+}
+

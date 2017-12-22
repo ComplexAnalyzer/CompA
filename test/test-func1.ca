@@ -1,0 +1,12 @@
+int sub(int a, int b)
+{
+  return a - b;
+}
+
+int main()
+{
+  int a;
+  a = sub(39, 3);
+  println(a);
+  return 0;
+}

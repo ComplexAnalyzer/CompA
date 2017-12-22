@@ -1,0 +1,15 @@
+cx foo(float a)
+{ 
+  cx c;
+  c= (3.2,3.4);
+  c[0]=a;
+  return c ;
+}
+
+int main()
+{
+  cx res;
+  res = foo(3.2);
+  print(res);
+  return 0;
+}
